@@ -1,3 +1,8 @@
-import { testFunc } from './modules/test.js';
+import { getWeatherData, extractRelavantData } from './js/weatherAPI.js';
 
-testFunc('Yo I am a test!');
+(async () => {
+  let currentWeather = await getWeatherData('boston');
+  console.log(currentWeather);
+  let importantStuff = extractRelavantData(currentWeather);
+  console.log(importantStuff);
+})();
