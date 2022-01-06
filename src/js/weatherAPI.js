@@ -1,7 +1,19 @@
-const getWeatherData = async function(location) {
+const getCurrentWeather = async function(location) {
   try {
     const API_key = 'd4a3732932608b542cb92d60253a6c4f';
     let url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${API_key}`;
+    const response = await fetch(url, { mode: 'cors' });
+    const data = await response.json();
+    return data;
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+const oneCall = async function (lon, lat) {
+  try {
+    const API_key = 'd4a3732932608b542cb92d60253a6c4f';
+    let url = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&appid=${API_key}`;
     const response = await fetch(url, { mode: 'cors' });
     const data = await response.json();
     return data;
@@ -18,4 +30,4 @@ function extractRelavantData(data) {
   return importantData;
 }
 
-export { getWeatherData, extractRelavantData };
+export { getCurrentWeather, oneCall, extractRelavantData };
