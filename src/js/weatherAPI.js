@@ -1,4 +1,4 @@
-async function getWeatherData(location) {
+const getWeatherData = async function(location) {
   try {
     const API_key = 'd4a3732932608b542cb92d60253a6c4f';
     let url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${API_key}`;
@@ -13,7 +13,7 @@ async function getWeatherData(location) {
 function extractRelavantData(data) {
   const importantData = {
     name: data.name,
-    weather: data.weather
+    weather: data.weather,
   };
   return importantData;
 }

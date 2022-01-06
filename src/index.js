@@ -1,8 +1,11 @@
-import { getWeatherData, extractRelavantData } from './js/weatherAPI.js';
+// import { getWeatherData, extractRelavantData } from './js/weatherAPI.js';
+import { renderLocationForm } from './js/UI.js';
 
-(async () => {
-  let currentWeather = await getWeatherData('boston');
-  console.log(currentWeather);
-  let importantStuff = extractRelavantData(currentWeather);
-  console.log(importantStuff);
-})();
+// createLocationForm();
+
+// (async () => {
+//   let currentWeather = await getWeatherData('boston');
+//   console.log(currentWeather);
+//   let importantStuff = extractRelavantData(currentWeather);
+//   console.log(importantStuff);
+// })();

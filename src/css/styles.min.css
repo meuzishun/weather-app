@@ -1,1 +1,2 @@
-/* No CSS *//*# sourceMappingURL=styles.min.css.map */
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap");*{margin:0;padding:0;box-sizing:border-box}html{font-size:16px;font-family:'Lato', sans-serif}body{height:100vh;display:flex;align-items:center;justify-content:center}.location-form{display:flex;gap:1rem}.location-form .location-label,.location-form .location-input,.location-form .location-button{font-size:1.3rem;color:#555;text-transform:capitalize;padding:0.5rem}
+/*# sourceMappingURL=styles.min.css.map */
