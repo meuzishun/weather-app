@@ -32,6 +32,49 @@ function renderLocationForm() {
   document.body.appendChild(elements[0]);
 }
 
+const renderDayCard = function (weekday, temp, summary) {
+  const cardContainer = document.querySelector('.card-container');
+
+  const dayCard = document.createElement('div');
+  dayCard.className = 'day-card';
+  cardContainer.appendChild(dayCard);
+  
+  const dayContainer = document.createElement('div');
+  dayContainer.className = 'day-container';
+  dayCard.appendChild(dayContainer);
+  
+  const day = document.createElement('p');
+  day.textContent = weekday;
+  dayContainer.appendChild(day);
+  
+  const imgContainer = document.createElement('div');
+  imgContainer.className = 'img-container';
+  dayCard.appendChild(imgContainer);
+  
+  const img = document.createElement('img');
+  img.src = '../src/images/icons/reshot-icon-cloud-sun-KQ247TGXSF.svg';
+  imgContainer.appendChild(img);
+  
+  const tempContainer = document.createElement('div');
+  tempContainer.className = 'temp-container';
+  dayCard.appendChild(tempContainer);
+
+  const tempText = document.createElement('p');
+  tempText.textContent = temp;
+  tempContainer.appendChild(tempText);
+  
+  const descriptionContainer = document.createElement('div');
+  descriptionContainer.className = 'description-container';
+  dayCard.appendChild(descriptionContainer);
+
+  const description = document.createElement('p');
+  description.textContent = summary;
+  descriptionContainer.appendChild(description);
+
+  console.log(dayCard);
+
+}
+
 async function handleLocationFormSubmit(e) {
   e.preventDefault();
   const searchInput = e.target.children[0];
@@ -52,5 +95,6 @@ async function handleLocationFormSubmit(e) {
 }
 
 // renderLocationForm();
+renderDayCard('Wednesday', '56º', 'Mostly Sunny');
 
 export { renderLocationForm };
