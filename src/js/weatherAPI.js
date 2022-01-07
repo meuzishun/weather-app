@@ -22,6 +22,29 @@ const oneCall = async function (lon, lat) {
   }
 }
 
+const extractDailyCardData = function(summary) {
+  const today = new Date();
+  const weekdayLookup = [
+    'Sunday',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday'
+  ];
+  const dailyCards = summary.daily.map((day, index) => {
+    if (index < 6) {
+      const weekday = weekdayLookup[(today.getDay() + index) % 6];
+      const temp = `${Math.round((((day.temp.day - 273.15) * 9) / 5) + 32)}º`;
+      const description = day.weather[0].description;
+      return { weekday, temp, description };
+    }
+  });
+  dailyCards.length = 6;
+  return dailyCards;
+}
+
 function extractRelavantData(data) {
   const importantData = {
     name: data.name,
@@ -30,4 +53,9 @@ function extractRelavantData(data) {
   return importantData;
 }
 
-export { getCurrentWeather, oneCall, extractRelavantData };
+export {
+  getCurrentWeather,
+  oneCall,
+  extractRelavantData,
+  extractDailyCardData,
+};

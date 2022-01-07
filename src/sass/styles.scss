@@ -13,11 +13,27 @@ html {
 }
 
 .wrapper {
-  header {}
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
 
   main {
+    width: 100%;
+
     .card-container {
+      width: 100%;
+      padding: 2rem;
       display: flex;
+      align-items: stretch;
+      justify-content: space-around;
+      gap: 1rem;
+      
+      * {
+        flex: 1;
+      }
     }
   }
   
@@ -42,11 +58,9 @@ html {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin: 10px;
+  // margin: 10px;
   padding: 10px;
   border: 1px solid #777;
-  width: 200px;
-  // height: 300px;
   border-radius: 10px;
 
   .day-container {

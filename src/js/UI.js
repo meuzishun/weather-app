@@ -1,6 +1,13 @@
-import { getCurrentWeather, oneCall, extractRelavantData } from './weatherAPI.js';
+import {
+  getCurrentWeather,
+  oneCall,
+  extractRelavantData,
+  extractDailyCardData,
+} from './weatherAPI.js';
 
 function renderLocationForm() {
+  const header = document.querySelector('header');
+
   const elementTypes = ['form', 'input', 'button'];
 
   const elements = elementTypes.map((type) => {
@@ -29,10 +36,15 @@ function renderLocationForm() {
   });
 
   elements[0].addEventListener('submit', handleLocationFormSubmit);
-  document.body.appendChild(elements[0]);
+  header.appendChild(elements[0]);
 }
 
-const renderDayCard = function (weekday, temp, summary) {
+const clearCards = function () {
+  const cardContainer = document.querySelector('.card-container');
+  cardContainer.textContent = '';
+}
+
+const renderDayCard = function (data) {
   const cardContainer = document.querySelector('.card-container');
 
   const dayCard = document.createElement('div');
@@ -44,7 +56,7 @@ const renderDayCard = function (weekday, temp, summary) {
   dayCard.appendChild(dayContainer);
   
   const day = document.createElement('p');
-  day.textContent = weekday;
+  day.textContent = data.weekday;
   dayContainer.appendChild(day);
   
   const imgContainer = document.createElement('div');
@@ -60,7 +72,7 @@ const renderDayCard = function (weekday, temp, summary) {
   dayCard.appendChild(tempContainer);
 
   const tempText = document.createElement('p');
-  tempText.textContent = temp;
+  tempText.textContent = data.temp;
   tempContainer.appendChild(tempText);
   
   const descriptionContainer = document.createElement('div');
@@ -68,33 +80,26 @@ const renderDayCard = function (weekday, temp, summary) {
   dayCard.appendChild(descriptionContainer);
 
   const description = document.createElement('p');
-  description.textContent = summary;
+  description.textContent = data.description;
   descriptionContainer.appendChild(description);
-
-  console.log(dayCard);
-
 }
 
 async function handleLocationFormSubmit(e) {
   e.preventDefault();
   const searchInput = e.target.children[0];
   const searchValue = searchInput.value;
-  console.log(searchValue);
 
   const data = await getCurrentWeather(searchValue);
-  // console.log(data);
-  // const relavantData = extractRelavantData(data);
-
   const summary = await oneCall(data.coord.lon, data.coord.lat);
-  // console.log(summary);
-
-  summary.hourly.forEach(min => console.log(new Date(min.dt)));
+  const dailyCards = extractDailyCardData(summary);
+  
+  clearCards();
+  dailyCards.forEach(renderDayCard);
 
   searchInput.value = '';
   searchInput.focus();
 }
 
-// renderLocationForm();
-renderDayCard('Wednesday', '56º', 'Mostly Sunny');
+renderLocationForm();
 
-export { renderLocationForm };
+export { renderLocationForm, renderDayCard };
