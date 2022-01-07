@@ -16,15 +16,18 @@ html {
   header {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     padding: 1rem;
+
+    .location-title {
+      font-size: 3rem;
+    }
   }
 
   main {
     width: 100%;
 
     .card-container {
-      width: 100%;
       padding: 2rem;
       display: flex;
       align-items: stretch;
@@ -34,6 +37,10 @@ html {
       * {
         flex: 1;
       }
+    }
+
+    .day-details-container {
+      
     }
   }
   
@@ -62,10 +69,21 @@ html {
   padding: 10px;
   border: 1px solid #777;
   border-radius: 10px;
+  box-shadow: 0.15rem 0.25rem .15rem;
+
+  transition: box-shadow 150ms;
+
+  &:active {
+    box-shadow: none;
+  }
+
+  * {
+    user-select: none;
+  }
 
   .day-container {
     p {
-      font-size: 2rem;
+      font-size: 1.5rem;
     }
   }
 
@@ -77,13 +95,13 @@ html {
 
   .temp-container {
     p {
-      font-size: 4rem;
+      font-size: 3rem;
     }
   }
 
   .description-container {
     p {
-      font-size: 1.5rem;
+      font-size: 1.2rem;
     }
   }
 }

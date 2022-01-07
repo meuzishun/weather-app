@@ -5,6 +5,14 @@ import {
   extractDailyCardData,
 } from './weatherAPI.js';
 
+const renderLocationHeader = function(data) {
+  const header = document.querySelector('header');
+  const locationTitle = document.createElement('h2');
+  locationTitle.className = 'location-title';
+  locationTitle.textContent = data;
+  header.insertBefore(locationTitle, header.children[0]);
+}
+
 function renderLocationForm() {
   const header = document.querySelector('header');
 
@@ -64,7 +72,7 @@ const renderDayCard = function (data) {
   dayCard.appendChild(imgContainer);
   
   const img = document.createElement('img');
-  img.src = '../src/images/icons/reshot-icon-cloud-sun-KQ247TGXSF.svg';
+  img.src = `http://openweathermap.org/img/wn/${data.icon}@2x.png`;
   imgContainer.appendChild(img);
   
   const tempContainer = document.createElement('div');
@@ -84,18 +92,27 @@ const renderDayCard = function (data) {
   descriptionContainer.appendChild(description);
 }
 
-async function handleLocationFormSubmit(e) {
+const renderDayCards = function (summary) {
+  const dailyData = extractDailyCardData(summary);
+  clearCards();
+  dailyData.forEach(renderDayCard);
+};
+
+const registerWeatherSearch = async function (searchValue) {
+  const data = await getCurrentWeather(searchValue);
+  console.log(data);
+  const summary = await oneCall(data.coord.lon, data.coord.lat);
+  console.log(summary);
+  renderDayCards(summary);
+
+  renderLocationHeader(data.name);
+
+}
+
+function handleLocationFormSubmit(e) {
   e.preventDefault();
   const searchInput = e.target.children[0];
-  const searchValue = searchInput.value;
-
-  const data = await getCurrentWeather(searchValue);
-  const summary = await oneCall(data.coord.lon, data.coord.lat);
-  const dailyCards = extractDailyCardData(summary);
-  
-  clearCards();
-  dailyCards.forEach(renderDayCard);
-
+  registerWeatherSearch(searchInput.value);
   searchInput.value = '';
   searchInput.focus();
 }

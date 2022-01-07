@@ -36,9 +36,10 @@ const extractDailyCardData = function(summary) {
   const dailyCards = summary.daily.map((day, index) => {
     if (index < 6) {
       const weekday = weekdayLookup[(today.getDay() + index) % 6];
+      const icon = day.weather[0].icon;
       const temp = `${Math.round((((day.temp.day - 273.15) * 9) / 5) + 32)}º`;
       const description = day.weather[0].description;
-      return { weekday, temp, description };
+      return { weekday, icon, temp, description };
     }
   });
   dailyCards.length = 6;
