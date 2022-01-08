@@ -55,8 +55,10 @@ html {
   .location-button {
     font-size: 1.3rem;
     color: #555;
-    text-transform: capitalize;
     padding: 0.5rem;
+  }
+  .location-button {
+    text-transform: capitalize;
   }
 }
 

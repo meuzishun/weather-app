@@ -1,4 +1,6 @@
-const getCurrentWeather = async function(location) {
+import { temperatureConversion } from "./utilities.js";
+
+const getCurrentWeather = async function (location) {
   try {
     const API_key = 'd4a3732932608b542cb92d60253a6c4f';
     let url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${API_key}`;
@@ -37,7 +39,8 @@ const extractDailyCardData = function(summary) {
     if (index < 6) {
       const weekday = weekdayLookup[(today.getDay() + index) % 6];
       const icon = day.weather[0].icon;
-      const temp = `${Math.round((((day.temp.day - 273.15) * 9) / 5) + 32)}º`;
+      // const temp = `${Math.round((((day.temp.day - 273.15) * 9) / 5) + 32)}º`;
+      const temp = `${Math.round(temperatureConversion('fahrenheit', 'kelvin', day.temp.day))}º`;
       const description = day.weather[0].description;
       return { weekday, icon, temp, description };
     }
