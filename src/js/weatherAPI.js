@@ -12,6 +12,19 @@ const getCurrentWeather = async function (location) {
   }
 }
 
+const getLocations = async function (searchValue) {
+  try {
+    const API_key = 'd4a3732932608b542cb92d60253a6c4f';
+    const url = `http://api.openweathermap.org/geo/1.0/direct?q=${searchValue}&limit=5&appid=${API_key}`;
+    const response = await fetch(url, { mode: 'cors' });
+    const data = await response.json();
+    return data;
+  } catch (err) {
+    console.log(err);
+  }
+
+}
+
 const oneCall = async function (lon, lat) {
   try {
     const API_key = 'd4a3732932608b542cb92d60253a6c4f';
@@ -59,6 +72,7 @@ function extractRelavantData(data) {
 
 export {
   getCurrentWeather,
+  getLocations,
   oneCall,
   extractRelavantData,
   extractDailyCardData,
