@@ -1,5 +1,6 @@
 import * as weatherAPI from './js/weatherAPI.js';
 import * as UI from './js/UI.js';
+import * as utilities from './js/utilities.js';
 
 (async function () {
   // const coords = await weatherAPI.getLocationFromZip('01801');
