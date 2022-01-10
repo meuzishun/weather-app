@@ -1,18 +1,40 @@
-// import * as weatherAPI from './js/weatherAPI.js';
-// import * as utilities from './js/utilities.js';
+import * as weatherAPI from './weatherAPI.js';
+import * as utilities from './utilities.js';
 
 // write a function that creates the markup for search form and adds an event listener to it
 
 const getInputType = function (input) {
+  const zipcodeRegex = /^\d{5}(?:[-\s]\d{4})?$/;
   // if zip, return zip
+  if (zipcodeRegex.test(input)) return 'zipcode';
   // if specific location, return specific
 };
 
-export const handleSearchSubmission = function (e) {
+export const handleSearchSubmission = async function (e) {
   e.preventDefault();
   const input = e.target.children[0];
-  console.log(input.value);
-  getInputType(input.value);
+  // console.log(input.value);
+  const type = getInputType(input.value);
+
+  if (type === 'zipcode') {
+    const data = await weatherAPI.getLocationFromZip(input.value);
+    // console.log(data);
+    const { lat, lon } = data;
+    const locations = await weatherAPI.getLocationsFromCoords(lat, lon, 1);
+    const { name, state, country } = locations[0];
+    const weatherData = await weatherAPI.getWeatherFromCoords(lat, lon);
+    console.log(name, state, country);
+    console.log(weatherData);
+  } else {
+    const locations = await weatherAPI.getLocationsFromNames(input.value);
+    if (locations.length === 1) {
+      const { lat, lon } = locations[0];
+      const weatherData = await weatherAPI.getWeatherFromCoords(lat, lon);
+      console.log(weatherData);
+    } else {
+      console.log(locations);
+    }
+  }
   // registerWeatherSearch(input.value);
   input.value = '';
   // input.focus();
