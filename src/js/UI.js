@@ -18,21 +18,23 @@ const getLocationWeather = async function (data) {
 
 const handleZipcodeInput = async function (input) {
   const data = await weatherAPI.getLocationFromZip(input);
-  console.log(data);
-  const location = await getLocationName(data);
-  console.log(location);
+  // console.log(data);
+  const locationName = await getLocationName(data);
+  renderLocationHeader(locationName);
   const weatherData = await getLocationWeather(data);
-  console.log(weatherData);
+  // console.log(weatherData);
 };
 
 const handleTextInput = async function (input) {
   const locations = await weatherAPI.getLocationsFromNames(input);
   if (locations.length === 1) {
-    const location = await getLocationName(locations[0]);
+    const locationName = await getLocationName(locations[0]);
+    renderLocationHeader(locationName);
     const weatherData = await getLocationWeather(locations[0]);
-    console.log(location);
+    // use weatherData to render main display
     console.log(weatherData);
   } else {
+    // use locations to render search results
     console.log(locations);
   }
 };
@@ -56,14 +58,9 @@ export const handleSearchSubmission = async function (e) {
 const locationForm = document.querySelector('.location-form');
 locationForm.addEventListener('submit', handleSearchSubmission);
 
-const renderLocationHeader = function (data) {
-  const header = document.querySelector('header');
-  clearElementContents(header);
-  const locationTitle = document.createElement('h2');
-  locationTitle.className = 'location-title';
-  locationTitle.textContent = data || 'Weather';
-  header.insertBefore(locationTitle, header.children[0]);
-  renderLocationForm();
+const renderLocationHeader = function (locationName) {
+  const locationHeading = document.querySelector('.location-title');
+  locationHeading.textContent = `${locationName.name}, ${locationName.state}, ${locationName.country}`;
 };
 
 const renderLocationForm = function () {
@@ -282,5 +279,7 @@ function handleLocationFormSubmit(e) {
 // renderLocationHeader();
 // registerWeatherSearch('01801');
 // registerWeatherSearch('london');
+parseInputValue('01801');
+// parseInputValue('boston, massachusetts, us');
 
 export { renderLocationForm, renderDayCard };
