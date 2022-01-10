@@ -10,34 +10,43 @@ const getInputType = function (input) {
   // if specific location, return specific
 };
 
+const handleZipcodeInput = async function (input) {
+  const data = await weatherAPI.getLocationFromZip(input);
+  console.log(data);
+  const { lat, lon } = data;
+  const locations = await weatherAPI.getLocationsFromCoords(lat, lon, 1);
+  const { name, state, country } = locations[0];
+  const weatherData = await weatherAPI.getWeatherFromCoords(lat, lon);
+  console.log(name, state, country);
+  console.log(weatherData);
+};
+
+const handleTextInput = async function (input) {
+  const locations = await weatherAPI.getLocationsFromNames(input);
+  if (locations.length === 1) {
+    const { lat, lon } = locations[0];
+    const weatherData = await weatherAPI.getWeatherFromCoords(lat, lon);
+    console.log(weatherData);
+  } else {
+    console.log(locations);
+  }
+};
+
+const parseInputValue = function (inputValue) {
+  const type = getInputType(inputValue);
+  if (type === 'zipcode') {
+    handleZipcodeInput(inputValue);
+  } else {
+    handleTextInput(inputValue);
+  }
+};
+
 export const handleSearchSubmission = async function (e) {
   e.preventDefault();
   const input = e.target.children[0];
-  // console.log(input.value);
-  const type = getInputType(input.value);
-
-  if (type === 'zipcode') {
-    const data = await weatherAPI.getLocationFromZip(input.value);
-    // console.log(data);
-    const { lat, lon } = data;
-    const locations = await weatherAPI.getLocationsFromCoords(lat, lon, 1);
-    const { name, state, country } = locations[0];
-    const weatherData = await weatherAPI.getWeatherFromCoords(lat, lon);
-    console.log(name, state, country);
-    console.log(weatherData);
-  } else {
-    const locations = await weatherAPI.getLocationsFromNames(input.value);
-    if (locations.length === 1) {
-      const { lat, lon } = locations[0];
-      const weatherData = await weatherAPI.getWeatherFromCoords(lat, lon);
-      console.log(weatherData);
-    } else {
-      console.log(locations);
-    }
-  }
-  // registerWeatherSearch(input.value);
+  const inputValue = input.value;
+  parseInputValue(inputValue);
   input.value = '';
-  // input.focus();
 };
 
 const locationForm = document.querySelector('.location-form');
