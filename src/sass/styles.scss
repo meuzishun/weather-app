@@ -13,6 +13,9 @@ html {
 }
 
 .wrapper {
+  width: 95%;
+  margin: auto;
+
   header {
     display: flex;
     align-items: center;
@@ -25,15 +28,43 @@ html {
   }
 
   main {
-    width: 100%;
+    .content-wrapper {
+      width: 75%;
 
+      margin: 3rem auto;
+      display: flex;
+      justify-content: space-evenly;
+
+      .image-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        img {
+          flex-grow: 1;
+        }
+
+        p {
+          font-size: 3rem;
+          text-transform: capitalize;
+        }
+      }
+
+      .text-container {
+        p {
+          font-size: 1.3rem;
+          padding: 0.5rem;
+        }
+      }
+    }
     .card-container {
       padding: 2rem;
       display: flex;
       align-items: stretch;
       justify-content: space-around;
       gap: 1rem;
-      
+
       * {
         flex: 1;
       }
@@ -58,6 +89,23 @@ html {
   }
 }
 
+.weather-nav {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+
+  p {
+    font-size: 1.3rem;
+    text-transform: capitalize;
+    cursor: pointer;
+
+    &:hover,
+    &.active {
+      text-decoration: underline;
+    }
+  }
+}
+
 .day-card {
   display: flex;
   flex-direction: column;
@@ -67,7 +115,7 @@ html {
   padding: 10px;
   border: 1px solid #777;
   border-radius: 10px;
-  box-shadow: 0.15rem 0.25rem .15rem;
+  box-shadow: 0.15rem 0.25rem 0.15rem;
 
   transition: box-shadow 150ms;
 
@@ -92,14 +140,21 @@ html {
   }
 
   .temp-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
     p {
-      font-size: 3rem;
+      font-size: 1.5rem;
     }
   }
 
   .description-container {
+    padding: 1rem;
+
     p {
       font-size: 1.2rem;
+      text-align: center;
     }
   }
 }

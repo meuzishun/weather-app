@@ -77,3 +77,11 @@ export const switchTempSystem = function (type) {
     span.textContent = newText;
   });
 }
+
+export const convert_metersSec_to_mph = function (val) {
+  return val * 2.2369;
+}
+
+export const getDayOfWeek = function (num) {
+  return ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][num];
+}

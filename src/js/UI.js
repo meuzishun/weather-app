@@ -1,8 +1,6 @@
 import * as weatherAPI from './weatherAPI.js';
 import * as utilities from './utilities.js';
 
-// write a function that creates the markup for search form and adds an event listener to it
-
 const getLocationName = async function (data) {
   const { lat, lon } = data;
   const location = await weatherAPI.getLocationsFromCoords(lat, lon, 1);
@@ -18,11 +16,10 @@ const getLocationWeather = async function (data) {
 
 const handleZipcodeInput = async function (input) {
   const data = await weatherAPI.getLocationFromZip(input);
-  // console.log(data);
   const locationName = await getLocationName(data);
   renderLocationHeader(locationName);
   const weatherData = await getLocationWeather(data);
-  // console.log(weatherData);
+  renderMainDisplay(weatherData);
 };
 
 const handleTextInput = async function (input) {
@@ -31,10 +28,8 @@ const handleTextInput = async function (input) {
     const locationName = await getLocationName(locations[0]);
     renderLocationHeader(locationName);
     const weatherData = await getLocationWeather(locations[0]);
-    // use weatherData to render main display
-    console.log(weatherData);
+    renderMainDisplay(weatherData);
   } else {
-    // use locations to render search results
     console.log(locations);
   }
 };
@@ -61,6 +56,139 @@ locationForm.addEventListener('submit', handleSearchSubmission);
 const renderLocationHeader = function (locationName) {
   const locationHeading = document.querySelector('.location-title');
   locationHeading.textContent = `${locationName.name}, ${locationName.state}, ${locationName.country}`;
+};
+
+const displays = {
+  currenty: null,
+  hourly: null,
+  daily: null,
+};
+
+const handleNavItemClick = function (e) {
+  const tab = e.target;
+  [...tab.parentElement.children].forEach((child) =>
+    child.classList.remove('active')
+  );
+  tab.classList.add('active');
+  const tabData = tab.dataset.content;
+  renderWeatherDisplay(displays[tabData]);
+};
+
+const renderWeatherNav = function () {
+  const weatherNav = document.createElement('nav');
+  weatherNav.className = 'weather-nav';
+
+  const currentlyTab = document.createElement('p');
+  currentlyTab.className = 'currently-tab';
+  currentlyTab.dataset.content = 'currently';
+  currentlyTab.textContent = 'currently';
+  weatherNav.appendChild(currentlyTab);
+
+  const hourlyTab = document.createElement('p');
+  hourlyTab.className = 'hourly-Tab';
+  hourlyTab.dataset.content = 'hourly';
+  hourlyTab.textContent = 'hourly';
+  weatherNav.appendChild(hourlyTab);
+
+  const dailyTab = document.createElement('p');
+  dailyTab.className = 'daily-Tab';
+  dailyTab.dataset.content = 'daily';
+  dailyTab.textContent = 'daily';
+  weatherNav.appendChild(dailyTab);
+
+  return weatherNav;
+};
+
+const renderMainDisplay = function (weatherData) {
+  const main = document.querySelector('main');
+  utilities.removeElementContents(main);
+
+  displays['currently'] = renderCurrentlyDisplay(weatherData.current);
+  displays['hourly'] = renderHourlyDisplay(weatherData.hourly);
+  displays['daily'] = renderDailyDisplay(weatherData.daily);
+
+  const weatherNav = renderWeatherNav();
+  [...weatherNav.children].forEach((navItem) => {
+    navItem.addEventListener('click', handleNavItemClick);
+  });
+
+  main.appendChild(weatherNav);
+};
+
+const renderWeatherDisplay = function (display) {
+  console.log(display);
+  const main = document.querySelector('main');
+  const elem = main.children[1];
+  if (elem) {
+    main.removeChild(elem);
+  }
+  main.appendChild(display);
+};
+
+const renderCurrentlyDisplay = function (data) {
+  const contentWrapper = document.createElement('div');
+  contentWrapper.className = 'content-wrapper';
+
+  const imgContainer = document.createElement('div');
+  imgContainer.className = 'image-container';
+  contentWrapper.appendChild(imgContainer);
+
+  const textContainer = document.createElement('div');
+  textContainer.className = 'text-container';
+  contentWrapper.appendChild(textContainer);
+
+  const icon = data.weather[0].icon;
+  const image = document.createElement('img');
+  image.src = `http://openweathermap.org/img/wn/${icon}@2x.png`;
+  imgContainer.appendChild(image);
+
+  const currentTime = document.createElement('p');
+  currentTime.textContent = `Time: ${utilities.formatTime(data.dt)}`;
+  textContainer.appendChild(currentTime);
+
+  const currentTemp = document.createElement('p');
+  currentTemp.textContent = `Temp: ${Math.round(
+    utilities.temperatureConversion('fahrenheit', 'kelvin', data.temp)
+  )}ºF`;
+  textContainer.appendChild(currentTemp);
+
+  const feelsLike = document.createElement('p');
+  feelsLike.textContent = `Feels like: ${Math.round(
+    utilities.temperatureConversion('fahrenheit', 'kelvin', data.feels_like)
+  )}ºF`;
+  textContainer.appendChild(feelsLike);
+
+  const sunrise = document.createElement('p');
+  sunrise.textContent = `Sunrise: ${utilities.formatTime(data.sunrise)}`;
+  textContainer.appendChild(sunrise);
+
+  const sunset = document.createElement('p');
+  sunset.textContent = `Sunset: ${utilities.formatTime(data.sunset)}`;
+  textContainer.appendChild(sunset);
+
+  const humidity = document.createElement('p');
+  humidity.textContent = `Humidity: ${data.humidity}%`;
+  textContainer.appendChild(humidity);
+
+  const windSpeed = document.createElement('p');
+  windSpeed.textContent = `Wind speed: ${Math.round(
+    utilities.convert_metersSec_to_mph(data.wind_speed)
+  )} mph`;
+  textContainer.appendChild(windSpeed);
+
+  const description = document.createElement('p');
+  description.textContent = `${data.weather[0].description}`;
+  imgContainer.appendChild(description);
+
+  return contentWrapper;
+};
+
+const renderHourlyDisplay = function (data) {
+  return data;
+};
+
+const renderDailyDisplay = function (data) {
+  return renderDayCards(data);
 };
 
 const renderLocationForm = function () {
@@ -107,7 +235,6 @@ const handleLocationClick = async function (e) {
   deleteSelf(resultsHeading);
   renderLocationHeader(location);
   renderDayCards(summary);
-  // renderCurrentData(summary);
   const searchResults = document.querySelector('.search-results');
   clearElementContents(searchResults);
 };
@@ -123,19 +250,15 @@ const renderSearchResults = function (locations) {
   const resultsHeading = document.createElement('h3');
   resultsHeading.className = 'results-heading';
   resultsHeading.textContent = 'Did you mean...';
-  // create a container for the choices
   const locationsContainer = document.createElement('div');
   locationsContainer.className = 'locations-container';
 
   locations.forEach((location) => {
-    // create individual elements that contain: city name, state, country...
     const locationResult = document.createElement('p');
     locationResult.className = 'location-result';
     locationResult.textContent = `${location.name}, ${location.state}, ${location.country}?`;
-    // use dataset to attach their lat/lon
     locationResult.dataset.lat = location.lat;
     locationResult.dataset.lon = location.lon;
-    // add click events that will feed lat/lon to oneCall function
     locationResult.addEventListener('click', handleLocationClick);
     locationsContainer.appendChild(locationResult);
   });
@@ -145,18 +268,17 @@ const renderSearchResults = function (locations) {
 };
 
 const renderDayCard = function (data) {
-  const cardContainer = document.querySelector('.card-container');
+  console.log(data);
 
   const dayCard = document.createElement('div');
   dayCard.className = 'day-card';
-  cardContainer.appendChild(dayCard);
 
   const dayContainer = document.createElement('div');
   dayContainer.className = 'day-container';
   dayCard.appendChild(dayContainer);
 
   const day = document.createElement('p');
-  day.textContent = data.weekday;
+  day.textContent = data.day_of_week;
   dayContainer.appendChild(day);
 
   const imgContainer = document.createElement('div');
@@ -164,7 +286,7 @@ const renderDayCard = function (data) {
   dayCard.appendChild(imgContainer);
 
   const img = document.createElement('img');
-  img.src = `http://openweathermap.org/img/wn/${data.icon}@2x.png`;
+  img.src = `http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
   imgContainer.appendChild(img);
 
   const tempContainer = document.createElement('div');
@@ -172,11 +294,11 @@ const renderDayCard = function (data) {
   dayCard.appendChild(tempContainer);
 
   const highTempText = document.createElement('p');
-  highTempText.textContent = `High: ${data.high}`;
+  highTempText.textContent = `High: ${Math.round(utilities.temperatureConversion('fahrenheit', 'kelvin', data.temp.max))}`;
   tempContainer.appendChild(highTempText);
 
   const lowTempText = document.createElement('p');
-  lowTempText.textContent = `Low: ${data.low}`;
+  lowTempText.textContent = `Low: ${Math.round(utilities.temperatureConversion('fahrenheit', 'kelvin', data.temp.min))}`;
   tempContainer.appendChild(lowTempText);
 
   const descriptionContainer = document.createElement('div');
@@ -184,14 +306,22 @@ const renderDayCard = function (data) {
   dayCard.appendChild(descriptionContainer);
 
   const description = document.createElement('p');
-  description.textContent = data.description;
+  description.textContent = data.weather[0].description;
   descriptionContainer.appendChild(description);
+
+  return dayCard;
 };
 
-const renderDayCards = function (summary) {
-  const dailyData = extractDailyCardData(summary);
-  clearElementContents(document.querySelector('.card-container'));
-  dailyData.forEach(renderDayCard);
+const renderDayCards = function (data) {
+  const cardContainer = document.createElement('div');
+  cardContainer.className = 'card-container';
+  data.forEach((day, index) => {
+    const today = new Date();
+    day.day_of_week = utilities.getDayOfWeek((today.getDay() + index) % 7);
+    const dayCard = renderDayCard(day);
+    cardContainer.appendChild(dayCard);
+  });
+  return cardContainer;
 };
 
 const renderCurrentData = function (summary) {
