@@ -3,29 +3,34 @@ import * as utilities from './utilities.js';
 
 // write a function that creates the markup for search form and adds an event listener to it
 
-const getInputType = function (input) {
-  const zipcodeRegex = /^\d{5}(?:[-\s]\d{4})?$/;
-  // if zip, return zip
-  if (zipcodeRegex.test(input)) return 'zipcode';
-  // if specific location, return specific
+const getLocationName = async function (data) {
+  const { lat, lon } = data;
+  const location = await weatherAPI.getLocationsFromCoords(lat, lon, 1);
+  const { name, state, country } = location[0];
+  return { name, state, country };
+};
+
+const getLocationWeather = async function (data) {
+  const { lat, lon } = data;
+  const weatherData = await weatherAPI.getWeatherFromCoords(lat, lon);
+  return weatherData;
 };
 
 const handleZipcodeInput = async function (input) {
   const data = await weatherAPI.getLocationFromZip(input);
   console.log(data);
-  const { lat, lon } = data;
-  const locations = await weatherAPI.getLocationsFromCoords(lat, lon, 1);
-  const { name, state, country } = locations[0];
-  const weatherData = await weatherAPI.getWeatherFromCoords(lat, lon);
-  console.log(name, state, country);
+  const location = await getLocationName(data);
+  console.log(location);
+  const weatherData = await getLocationWeather(data);
   console.log(weatherData);
 };
 
 const handleTextInput = async function (input) {
   const locations = await weatherAPI.getLocationsFromNames(input);
   if (locations.length === 1) {
-    const { lat, lon } = locations[0];
-    const weatherData = await weatherAPI.getWeatherFromCoords(lat, lon);
+    const location = await getLocationName(locations[0]);
+    const weatherData = await getLocationWeather(locations[0]);
+    console.log(location);
     console.log(weatherData);
   } else {
     console.log(locations);
@@ -33,8 +38,7 @@ const handleTextInput = async function (input) {
 };
 
 const parseInputValue = function (inputValue) {
-  const type = getInputType(inputValue);
-  if (type === 'zipcode') {
+  if (/^\d{5}(?:[-\s]\d{4})?$/.test(inputValue)) {
     handleZipcodeInput(inputValue);
   } else {
     handleTextInput(inputValue);
