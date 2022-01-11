@@ -127,6 +127,7 @@ const renderWeatherDisplay = function (display) {
 };
 
 const renderCurrentlyDisplay = function (data) {
+  console.log(data);
   const contentWrapper = document.createElement('div');
   contentWrapper.className = 'content-wrapper';
 
@@ -142,6 +143,17 @@ const renderCurrentlyDisplay = function (data) {
   const image = document.createElement('img');
   image.src = `http://openweathermap.org/img/wn/${icon}@2x.png`;
   imgContainer.appendChild(image);
+
+  const description = document.createElement('p');
+  description.textContent = `${data.weather[0].description}`;
+  imgContainer.appendChild(description);
+
+  //! WFT?!
+  for (const prop in data) {
+    if (utilities.currentlyPropConversion[prop]) {
+      console.log(prop);
+    }
+  }
 
   const currentTime = document.createElement('p');
   currentTime.textContent = `Time: ${utilities.formatTime(data.dt)}`;
@@ -176,10 +188,6 @@ const renderCurrentlyDisplay = function (data) {
     utilities.convert_metersSec_to_mph(data.wind_speed)
   )} mph`;
   textContainer.appendChild(windSpeed);
-
-  const description = document.createElement('p');
-  description.textContent = `${data.weather[0].description}`;
-  imgContainer.appendChild(description);
 
   return contentWrapper;
 };

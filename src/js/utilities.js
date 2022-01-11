@@ -71,25 +71,49 @@ export const switchTempSystem = function (type) {
     span.classList.remove('celsius');
     span.classList.add(type);
 
-    const newNumber = Math.round(temperatureConversion(type, `${type === 'celsius' ? 'fahrenheit' : 'celsius'}`, oldNumber));
+    const newNumber = Math.round(
+      temperatureConversion(
+        type,
+        `${type === 'celsius' ? 'fahrenheit' : 'celsius'}`,
+        oldNumber
+      )
+    );
     const newLetter = type.slice(0, 1).toUpperCase();
     const newText = `${newNumber}\u00B0${newLetter}`;
     span.textContent = newText;
   });
-}
+};
 
 export const convert_metersSec_to_mph = function (val) {
   return val * 2.2369;
-}
+};
 
 export const getDayOfWeek = function (num) {
-  return ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][num];
-}
+  return [
+    'Sunday',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+  ][num];
+};
 
 export const propConversionLookup = {
-  'dt': 'time',
-  'name': 'city',
-  'zip': 'zipcode',
-  'lat': 'latitude',
-  'lon': 'longitude'
-}
+  dt: 'time',
+  name: 'city',
+  zip: 'zipcode',
+  lat: 'latitude',
+  lon: 'longitude',
+};
+
+export const currentlyPropConversion = {
+  dt: 'time',
+  temp: 'temp',
+  feels_like: 'feels like',
+  sunrise: 'sunrise',
+  sunset: 'sunset',
+  humidity: 'humidity',
+  wind_speed: 'wind speed',
+};
