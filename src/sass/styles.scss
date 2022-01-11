@@ -74,6 +74,20 @@ html {
   }
 }
 
+// .location-form {
+//   display: flex;
+//   gap: 1rem;
+
+//   .location-input,
+//   .location-button {
+//     font-size: 1.3rem;
+//     color: #555;
+//     padding: 0.5rem;
+//   }
+//   .location-button {
+//     text-transform: capitalize;
+//   }
+// }
 .location-form {
   display: flex;
   gap: 1rem;
@@ -83,9 +97,14 @@ html {
     font-size: 1.3rem;
     color: #555;
     padding: 0.5rem;
+    border: 1px solid #555;
+    border-radius: 5px;
   }
   .location-button {
     text-transform: capitalize;
+    background-color: rgba(0, 119, 255, 0.705);
+    color: #fefefe;
+    padding: 0.5rem 1rem;
   }
 }
 
