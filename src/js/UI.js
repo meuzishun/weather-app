@@ -31,6 +31,7 @@ const handleTextInput = async function (input) {
     renderMainDisplay(weatherData);
   } else {
     console.log(locations);
+    renderSearchResults(locations);
   }
 };
 
@@ -250,18 +251,25 @@ const handleLocationClick = async function (e) {
 };
 
 const renderSearchResults = function (locations) {
-  const header = document.querySelector('header');
-  clearElementContents(header);
-  const resultsContainer = document.querySelector('.search-results');
-  clearElementContents(resultsContainer);
-  const cardContainer = document.querySelector('.card-container');
-  clearElementContents(cardContainer);
+  // const header = document.querySelector('header');
+  // clearElementContents(header);
+  // const resultsContainer = document.querySelector('.search-results');
+  // clearElementContents(resultsContainer);
+  // const cardContainer = document.querySelector('.card-container');
+  // clearElementContents(cardContainer);
+
+  const main = document.querySelector('main');
+  utilities.removeElementContents(main);
+
+  const resultsContainer = document.createElement('div');
+  resultsContainer.className = 'results-container';
+  
+  const locationsContainer = document.createElement('div');
+  locationsContainer.className = 'locations-container';
 
   const resultsHeading = document.createElement('h3');
   resultsHeading.className = 'results-heading';
   resultsHeading.textContent = 'Did you mean...';
-  const locationsContainer = document.createElement('div');
-  locationsContainer.className = 'locations-container';
 
   locations.forEach((location) => {
     const locationResult = document.createElement('p');
@@ -275,6 +283,7 @@ const renderSearchResults = function (locations) {
 
   resultsContainer.appendChild(resultsHeading);
   resultsContainer.appendChild(locationsContainer);
+  main.appendChild(resultsContainer);
 };
 
 const renderHourCard = function (data) {
