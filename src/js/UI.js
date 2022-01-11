@@ -96,6 +96,7 @@ const renderWeatherNav = function () {
   dailyTab.textContent = 'daily';
   weatherNav.appendChild(dailyTab);
 
+  currentlyTab.classList.add('active');
   return weatherNav;
 };
 
@@ -113,10 +114,10 @@ const renderMainDisplay = function (weatherData) {
   });
 
   main.appendChild(weatherNav);
+  renderWeatherDisplay(displays['currently']);
 };
 
 const renderWeatherDisplay = function (display) {
-  console.log(display);
   const main = document.querySelector('main');
   const elem = main.children[1];
   if (elem) {
@@ -268,8 +269,6 @@ const renderSearchResults = function (locations) {
 };
 
 const renderDayCard = function (data) {
-  console.log(data);
-
   const dayCard = document.createElement('div');
   dayCard.className = 'day-card';
 
