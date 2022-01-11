@@ -16,6 +16,11 @@ const getLocationWeather = async function (data) {
 
 const handleZipcodeInput = async function (input) {
   const data = await weatherAPI.getLocationFromZip(input);
+  // console.table(data);
+  // for (const prop in data) {
+  //   const title = utilities.propConversionLookup[prop] || prop;
+  //   console.log(title);
+  // }
   const locationName = await getLocationName(data);
   renderLocationHeader(locationName);
   const weatherData = await getLocationWeather(data);
@@ -79,26 +84,41 @@ const renderWeatherNav = function () {
   const weatherNav = document.createElement('nav');
   weatherNav.className = 'weather-nav';
 
-  const currentlyTab = document.createElement('p');
-  currentlyTab.className = 'currently-tab';
-  currentlyTab.dataset.content = 'currently';
-  currentlyTab.textContent = 'currently';
-  weatherNav.appendChild(currentlyTab);
+  const tabTitles = ['currently', 'hourly', 'daily'];
+  tabTitles.forEach((title) => {
+    const tab = createNavTab(title);
+    weatherNav.appendChild(tab);
+  });
 
-  const hourlyTab = document.createElement('p');
-  hourlyTab.className = 'hourly-Tab';
-  hourlyTab.dataset.content = 'hourly';
-  hourlyTab.textContent = 'hourly';
-  weatherNav.appendChild(hourlyTab);
+  // const currentlyTab = document.createElement('p');
+  // currentlyTab.className = 'currently-tab';
+  // currentlyTab.dataset.content = 'currently';
+  // currentlyTab.textContent = 'currently';
+  // weatherNav.appendChild(currentlyTab);
 
-  const dailyTab = document.createElement('p');
-  dailyTab.className = 'daily-Tab';
-  dailyTab.dataset.content = 'daily';
-  dailyTab.textContent = 'daily';
-  weatherNav.appendChild(dailyTab);
+  // const hourlyTab = document.createElement('p');
+  // hourlyTab.className = 'hourly-Tab';
+  // hourlyTab.dataset.content = 'hourly';
+  // hourlyTab.textContent = 'hourly';
+  // weatherNav.appendChild(hourlyTab);
 
-  currentlyTab.classList.add('active');
+  // const dailyTab = document.createElement('p');
+  // dailyTab.className = 'daily-Tab';
+  // dailyTab.dataset.content = 'daily';
+  // dailyTab.textContent = 'daily';
+  // weatherNav.appendChild(dailyTab);
+
+  // currentlyTab.classList.add('active');
   return weatherNav;
+};
+
+const createNavTab = function (title) {
+  const tab = document.createElement('p');
+  tab.className = `${title}-tab`;
+  tab.dataset.content = title;
+  tab.textContent = title;
+  if (title === 'currently') tab.classList.add('active');
+  return tab;
 };
 
 const renderMainDisplay = function (weatherData) {
@@ -186,7 +206,6 @@ const renderCurrentlyDisplay = function (data) {
 };
 
 const renderHourlyDisplay = function (data) {
-  console.log(data);
   const hourlyCardContainer = document.createElement('div');
   hourlyCardContainer.className = 'hourly-card-container';
 
@@ -256,7 +275,7 @@ const renderSearchResults = function (locations) {
 
   const resultsContainer = document.createElement('div');
   resultsContainer.className = 'search-results';
-  
+
   const locationsContainer = document.createElement('div');
   locationsContainer.className = 'locations-container';
 
@@ -288,7 +307,13 @@ const renderHourCard = function (data) {
   hourCard.appendChild(timeContainer);
 
   const time = document.createElement('p');
-  time.textContent = `${utilities.formatTime(data.dt) === '0:00 AM' ? '12:00 AM' : utilities.formatTime(data.dt) === '0:00 PM' ? '12:00 PM' : utilities.formatTime(data.dt)}`;
+  time.textContent = `${
+    utilities.formatTime(data.dt) === '0:00 AM'
+      ? '12:00 AM'
+      : utilities.formatTime(data.dt) === '0:00 PM'
+      ? '12:00 PM'
+      : utilities.formatTime(data.dt)
+  }`;
   timeContainer.appendChild(time);
 
   const imgContainer = document.createElement('div');
@@ -353,11 +378,15 @@ const renderDayCard = function (data) {
   dayCard.appendChild(tempContainer);
 
   const highTempText = document.createElement('p');
-  highTempText.textContent = `High: ${Math.round(utilities.temperatureConversion('fahrenheit', 'kelvin', data.temp.max))}`;
+  highTempText.textContent = `High: ${Math.round(
+    utilities.temperatureConversion('fahrenheit', 'kelvin', data.temp.max)
+  )}`;
   tempContainer.appendChild(highTempText);
 
   const lowTempText = document.createElement('p');
-  lowTempText.textContent = `Low: ${Math.round(utilities.temperatureConversion('fahrenheit', 'kelvin', data.temp.min))}`;
+  lowTempText.textContent = `Low: ${Math.round(
+    utilities.temperatureConversion('fahrenheit', 'kelvin', data.temp.min)
+  )}`;
   tempContainer.appendChild(lowTempText);
 
   const descriptionContainer = document.createElement('div');

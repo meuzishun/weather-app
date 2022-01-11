@@ -85,3 +85,11 @@ export const convert_metersSec_to_mph = function (val) {
 export const getDayOfWeek = function (num) {
   return ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][num];
 }
+
+export const propConversionLookup = {
+  'dt': 'time',
+  'name': 'city',
+  'zip': 'zipcode',
+  'lat': 'latitude',
+  'lon': 'longitude'
+}
