@@ -16,11 +16,6 @@ const getLocationWeather = async function (data) {
 
 const handleZipcodeInput = async function (input) {
   const data = await weatherAPI.getLocationFromZip(input);
-  // console.table(data);
-  // for (const prop in data) {
-  //   const title = utilities.propConversionLookup[prop] || prop;
-  //   console.log(title);
-  // }
   const locationName = await getLocationName(data);
   renderLocationHeader(locationName);
   const weatherData = await getLocationWeather(data);
@@ -127,7 +122,6 @@ const renderWeatherDisplay = function (display) {
 };
 
 const renderCurrentlyDisplay = function (data) {
-  console.log(data);
   const contentWrapper = document.createElement('div');
   contentWrapper.className = 'content-wrapper';
 
@@ -238,15 +232,7 @@ const renderLocationForm = function () {
 const handleLocationClick = async function (e) {
   const elem = e.target;
   const location = elem.innerText.slice(0, -1);
-  const lat = elem.dataset.lat;
-  const lon = elem.dataset.lon;
-  const summary = await oneCall(lat, lon);
-  // const resultsHeading = document.querySelector('.results-heading');
-  // deleteSelf(resultsHeading);
-  // renderLocationHeader(location);
-  // renderDayCards(summary);
-  // const searchResults = document.querySelector('.search-results');
-  // clearElementContents(searchResults);
+  handleTextInput(location);
 };
 
 const renderSearchResults = function (locations) {
@@ -392,91 +378,6 @@ const renderDayCards = function (data) {
   return cardContainer;
 };
 
-const renderCurrentData = function (summary) {
-  const currentWeatherContainer = document.querySelector('.current-weather');
-
-  console.log(summary);
-
-  // const currentTime = document.createElement('p');
-  // currentTime.className = 'current-time';
-  // currentTime.textContent = `Current time: ${formatTime(summary.dt)}`;
-  // currentWeatherContainer.appendChild(currentTime);
-
-  // const sunrise = document.createElement('p');
-  // sunrise.className = 'sunrise';
-  // sunrise.textContent = `Sunrise: ${formatTime(summary.sunrise)}`;
-  // currentWeatherContainer.appendChild(sunrise);
-
-  // const sunset = document.createElement('p');
-  // sunset.className = 'sunset';
-  // sunset.textContent = `Sunset: ${formatTime(summary.sunset)}`;
-  // currentWeatherContainer.appendChild(sunset);
-
-  // const currentTemp = document.createElement('p');
-  // currentTemp.className = 'current-temp';
-  // currentTemp.textContent = `Current temp: ${Math.round(temperatureConversion('fahrenheit','kelvin', summary.temp))}º`;
-  // currentWeatherContainer.appendChild(currentTemp);
-
-  // const feelsLike = document.createElement('p');
-  // feelsLike.className = 'feels-like';
-  // feelsLike.textContent = `Feels like: ${Math.round(temperatureConversion('fahrenheit','kelvin', summary.feels_like))}º`;
-  // currentWeatherContainer.appendChild(feelsLike);
-
-  // const weather = document.createElement('p');
-  // weather.className = 'weather';
-  // weather.textContent = `Weather: ${summary.weather[0].description}`;
-  // currentWeatherContainer.appendChild(weather);
-
-  const currentSummary = document.createElement('p');
-  currentSummary.className = 'current-summary';
-  currentSummary.textContent = `${formatTime(summary.dt)}, ${Math.round(
-    temperatureConversion('fahrenheit', 'kelvin', summary.temp)
-  )}º (feels like ${Math.round(
-    temperatureConversion('fahrenheit', 'kelvin', summary.feels_like)
-  )}º), ${summary.weather[0].description}`;
-  currentWeatherContainer.appendChild(currentSummary);
-  // for (const key in summary) {
-  //   const para = document.createElement('p');
-  //   para.textContent = `${key}: ${summary[key]}`;
-  //   dayDetailsContainer.appendChild(para);
-  // }
-};
-
-const registerWeatherSearch = async function (searchValue) {
-  // const data = await getCurrentWeather(searchValue);
-  // console.log(data);
-  // const summary = await oneCall(data.coord.lat, data.coord.lon);
-  // console.log(summary);
-  // renderDayCards(summary);
-
-  // renderLocationHeader(data.name);
-  const url = createLocationURL(searchValue);
-  const locations = await getLocations(url);
-  if (Array.isArray(locations)) {
-    renderSearchResults(locations);
-  } else {
-    const summary = await oneCall(locations.lat, locations.lon);
-    const header = document.querySelector('header');
-    clearElementContents(header);
-    renderLocationHeader(`${locations.name}, ${locations.country}`);
-    renderDayCards(summary);
-    renderCurrentData(summary.current);
-    console.log(summary);
-  }
-};
-
-function handleLocationFormSubmit(e) {
-  e.preventDefault();
-  const searchInput = e.target.children[0];
-  registerWeatherSearch(searchInput.value);
-  searchInput.value = '';
-  searchInput.focus();
-}
-
-// renderLocationForm();
-// renderLocationHeader();
-// registerWeatherSearch('01801');
-// registerWeatherSearch('london');
 parseInputValue('01801');
 // parseInputValue('boston, massachusetts, us');
 
