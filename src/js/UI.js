@@ -185,7 +185,16 @@ const renderCurrentlyDisplay = function (data) {
 };
 
 const renderHourlyDisplay = function (data) {
-  return data;
+  console.log(data);
+  const hourlyCardContainer = document.createElement('div');
+  hourlyCardContainer.className = 'hourly-card-container';
+
+  data.forEach((hour) => {
+    const hourCard = renderHourCard(hour);
+    hourlyCardContainer.appendChild(hourCard);
+  });
+
+  return hourlyCardContainer;
 };
 
 const renderDailyDisplay = function (data) {
@@ -266,6 +275,55 @@ const renderSearchResults = function (locations) {
 
   resultsContainer.appendChild(resultsHeading);
   resultsContainer.appendChild(locationsContainer);
+};
+
+const renderHourCard = function (data) {
+  const hourCard = document.createElement('div');
+  hourCard.className = 'hour-card';
+
+  const timeContainer = document.createElement('div');
+  timeContainer.className = 'day-container';
+  hourCard.appendChild(timeContainer);
+
+  const time = document.createElement('p');
+  time.textContent = `${utilities.formatTime(data.dt) === '0:00 AM' ? '12:00 AM' : utilities.formatTime(data.dt) === '0:00 PM' ? '12:00 PM' : utilities.formatTime(data.dt)}`;
+  timeContainer.appendChild(time);
+
+  const imgContainer = document.createElement('div');
+  imgContainer.className = 'img-container';
+  hourCard.appendChild(imgContainer);
+
+  const img = document.createElement('img');
+  img.src = `http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
+  imgContainer.appendChild(img);
+
+  const tempContainer = document.createElement('div');
+  tempContainer.className = 'temp-container';
+  hourCard.appendChild(tempContainer);
+
+  const tempText = document.createElement('p');
+  tempText.textContent = `${Math.round(
+    utilities.temperatureConversion('fahrenheit', 'kelvin', data.temp)
+  )}ºF`;
+  tempContainer.appendChild(tempText);
+
+  const descriptionContainer = document.createElement('div');
+  descriptionContainer.className = 'description-container';
+  hourCard.appendChild(descriptionContainer);
+
+  const description = document.createElement('p');
+  description.textContent = data.weather[0].description;
+  descriptionContainer.appendChild(description);
+
+  const percipitationContainer = document.createElement('div');
+  percipitationContainer.className = 'percipitation-container';
+  hourCard.appendChild(percipitationContainer);
+
+  const percipitation = document.createElement('p');
+  percipitation.textContent = `${Math.round(data.pop * 100)}%`;
+  percipitationContainer.appendChild(percipitation);
+
+  return hourCard;
 };
 
 const renderDayCard = function (data) {
