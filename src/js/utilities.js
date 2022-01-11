@@ -107,13 +107,3 @@ export const propConversionLookup = {
   lat: 'latitude',
   lon: 'longitude',
 };
-
-export const currentlyPropConversion = {
-  dt: 'time',
-  temp: 'temp',
-  feels_like: 'feels like',
-  sunrise: 'sunrise',
-  sunset: 'sunset',
-  humidity: 'humidity',
-  wind_speed: 'wind speed',
-};

@@ -135,10 +135,6 @@ const renderCurrentlyDisplay = function (data) {
   imgContainer.className = 'image-container';
   contentWrapper.appendChild(imgContainer);
 
-  const textContainer = document.createElement('div');
-  textContainer.className = 'text-container';
-  contentWrapper.appendChild(textContainer);
-
   const icon = data.weather[0].icon;
   const image = document.createElement('img');
   image.src = `http://openweathermap.org/img/wn/${icon}@2x.png`;
@@ -148,12 +144,9 @@ const renderCurrentlyDisplay = function (data) {
   description.textContent = `${data.weather[0].description}`;
   imgContainer.appendChild(description);
 
-  //! WFT?!
-  for (const prop in data) {
-    if (utilities.currentlyPropConversion[prop]) {
-      console.log(prop);
-    }
-  }
+  const textContainer = document.createElement('div');
+  textContainer.className = 'text-container';
+  contentWrapper.appendChild(textContainer);
 
   const currentTime = document.createElement('p');
   currentTime.textContent = `Time: ${utilities.formatTime(data.dt)}`;
