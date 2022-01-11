@@ -242,27 +242,20 @@ const handleLocationClick = async function (e) {
   const lat = elem.dataset.lat;
   const lon = elem.dataset.lon;
   const summary = await oneCall(lat, lon);
-  const resultsHeading = document.querySelector('.results-heading');
-  deleteSelf(resultsHeading);
-  renderLocationHeader(location);
-  renderDayCards(summary);
-  const searchResults = document.querySelector('.search-results');
-  clearElementContents(searchResults);
+  // const resultsHeading = document.querySelector('.results-heading');
+  // deleteSelf(resultsHeading);
+  // renderLocationHeader(location);
+  // renderDayCards(summary);
+  // const searchResults = document.querySelector('.search-results');
+  // clearElementContents(searchResults);
 };
 
 const renderSearchResults = function (locations) {
-  // const header = document.querySelector('header');
-  // clearElementContents(header);
-  // const resultsContainer = document.querySelector('.search-results');
-  // clearElementContents(resultsContainer);
-  // const cardContainer = document.querySelector('.card-container');
-  // clearElementContents(cardContainer);
-
   const main = document.querySelector('main');
   utilities.removeElementContents(main);
 
   const resultsContainer = document.createElement('div');
-  resultsContainer.className = 'results-container';
+  resultsContainer.className = 'search-results';
   
   const locationsContainer = document.createElement('div');
   locationsContainer.className = 'locations-container';
