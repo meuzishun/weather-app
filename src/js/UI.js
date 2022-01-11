@@ -84,41 +84,20 @@ const renderWeatherNav = function () {
   const weatherNav = document.createElement('nav');
   weatherNav.className = 'weather-nav';
 
-  const tabTitles = ['currently', 'hourly', 'daily'];
-  tabTitles.forEach((title) => {
-    const tab = createNavTab(title);
-    weatherNav.appendChild(tab);
-  });
+  const createNavTab = function (title) {
+    const tab = document.createElement('p');
+    tab.className = `${title}-tab`;
+    tab.dataset.content = title;
+    tab.textContent = title;
+    if (title === 'currently') tab.classList.add('active');
+    return tab;
+  };
 
-  // const currentlyTab = document.createElement('p');
-  // currentlyTab.className = 'currently-tab';
-  // currentlyTab.dataset.content = 'currently';
-  // currentlyTab.textContent = 'currently';
-  // weatherNav.appendChild(currentlyTab);
+  ['currently', 'hourly', 'daily'].forEach((title) =>
+    weatherNav.appendChild(createNavTab(title))
+  );
 
-  // const hourlyTab = document.createElement('p');
-  // hourlyTab.className = 'hourly-Tab';
-  // hourlyTab.dataset.content = 'hourly';
-  // hourlyTab.textContent = 'hourly';
-  // weatherNav.appendChild(hourlyTab);
-
-  // const dailyTab = document.createElement('p');
-  // dailyTab.className = 'daily-Tab';
-  // dailyTab.dataset.content = 'daily';
-  // dailyTab.textContent = 'daily';
-  // weatherNav.appendChild(dailyTab);
-
-  // currentlyTab.classList.add('active');
   return weatherNav;
-};
-
-const createNavTab = function (title) {
-  const tab = document.createElement('p');
-  tab.className = `${title}-tab`;
-  tab.dataset.content = title;
-  tab.textContent = title;
-  if (title === 'currently') tab.classList.add('active');
-  return tab;
 };
 
 const renderMainDisplay = function (weatherData) {
