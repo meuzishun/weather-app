@@ -30,7 +30,6 @@ const handleTextInput = async function (input) {
     const weatherData = await getLocationWeather(locations[0]);
     renderMainDisplay(weatherData);
   } else {
-    console.log(locations);
     renderSearchResults(locations);
   }
 };
@@ -51,8 +50,8 @@ export const handleSearchSubmission = async function (e) {
   input.value = '';
 };
 
-const locationForm = document.querySelector('.location-form');
-locationForm.addEventListener('submit', handleSearchSubmission);
+// const locationForm = document.querySelector('.location-form');
+// locationForm.addEventListener('submit', handleSearchSubmission);
 
 const renderLocationHeader = function (locationName) {
   const locationHeading = document.querySelector('.location-title');
@@ -183,6 +182,61 @@ const renderHourlyDisplay = function (data) {
   const hourlyCardContainer = document.createElement('div');
   hourlyCardContainer.className = 'hourly-card-container';
 
+  const renderHourCard = function (data) {
+    const hourCard = document.createElement('div');
+    hourCard.className = 'hour-card';
+
+    const timeContainer = document.createElement('div');
+    timeContainer.className = 'day-container';
+    hourCard.appendChild(timeContainer);
+
+    const time = document.createElement('p');
+    time.textContent = `${
+      utilities.formatTime(data.dt) === '0:00 AM'
+        ? '12:00 AM'
+        : utilities.formatTime(data.dt) === '0:00 PM'
+        ? '12:00 PM'
+        : utilities.formatTime(data.dt)
+    }`;
+    timeContainer.appendChild(time);
+
+    const imgContainer = document.createElement('div');
+    imgContainer.className = 'img-container';
+    hourCard.appendChild(imgContainer);
+
+    const img = document.createElement('img');
+    img.src = `http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
+    imgContainer.appendChild(img);
+
+    const tempContainer = document.createElement('div');
+    tempContainer.className = 'temp-container';
+    hourCard.appendChild(tempContainer);
+
+    const tempText = document.createElement('p');
+    tempText.textContent = `${Math.round(
+      utilities.temperatureConversion('fahrenheit', 'kelvin', data.temp)
+    )}ºF`;
+    tempContainer.appendChild(tempText);
+
+    const descriptionContainer = document.createElement('div');
+    descriptionContainer.className = 'description-container';
+    hourCard.appendChild(descriptionContainer);
+
+    const description = document.createElement('p');
+    description.textContent = data.weather[0].description;
+    descriptionContainer.appendChild(description);
+
+    const percipitationContainer = document.createElement('div');
+    percipitationContainer.className = 'percipitation-container';
+    hourCard.appendChild(percipitationContainer);
+
+    const percipitation = document.createElement('p');
+    percipitation.textContent = `${Math.round(data.pop * 100)}%`;
+    percipitationContainer.appendChild(percipitation);
+
+    return hourCard;
+  };
+
   data.forEach((hour) => {
     const hourCard = renderHourCard(hour);
     hourlyCardContainer.appendChild(hourCard);
@@ -225,7 +279,8 @@ const renderLocationForm = function () {
     if (index > 0) elements[0].appendChild(elem);
   });
 
-  elements[0].addEventListener('submit', handleLocationFormSubmit);
+  // elements[0].addEventListener('submit', handleLocationFormSubmit);
+  elements[0].addEventListener('submit', handleSearchSubmission);
   header.appendChild(elements[0]);
 };
 
@@ -264,121 +319,69 @@ const renderSearchResults = function (locations) {
   main.appendChild(resultsContainer);
 };
 
-const renderHourCard = function (data) {
-  const hourCard = document.createElement('div');
-  hourCard.className = 'hour-card';
-
-  const timeContainer = document.createElement('div');
-  timeContainer.className = 'day-container';
-  hourCard.appendChild(timeContainer);
-
-  const time = document.createElement('p');
-  time.textContent = `${
-    utilities.formatTime(data.dt) === '0:00 AM'
-      ? '12:00 AM'
-      : utilities.formatTime(data.dt) === '0:00 PM'
-      ? '12:00 PM'
-      : utilities.formatTime(data.dt)
-  }`;
-  timeContainer.appendChild(time);
-
-  const imgContainer = document.createElement('div');
-  imgContainer.className = 'img-container';
-  hourCard.appendChild(imgContainer);
-
-  const img = document.createElement('img');
-  img.src = `http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
-  imgContainer.appendChild(img);
-
-  const tempContainer = document.createElement('div');
-  tempContainer.className = 'temp-container';
-  hourCard.appendChild(tempContainer);
-
-  const tempText = document.createElement('p');
-  tempText.textContent = `${Math.round(
-    utilities.temperatureConversion('fahrenheit', 'kelvin', data.temp)
-  )}ºF`;
-  tempContainer.appendChild(tempText);
-
-  const descriptionContainer = document.createElement('div');
-  descriptionContainer.className = 'description-container';
-  hourCard.appendChild(descriptionContainer);
-
-  const description = document.createElement('p');
-  description.textContent = data.weather[0].description;
-  descriptionContainer.appendChild(description);
-
-  const percipitationContainer = document.createElement('div');
-  percipitationContainer.className = 'percipitation-container';
-  hourCard.appendChild(percipitationContainer);
-
-  const percipitation = document.createElement('p');
-  percipitation.textContent = `${Math.round(data.pop * 100)}%`;
-  percipitationContainer.appendChild(percipitation);
-
-  return hourCard;
-};
-
-const renderDayCard = function (data) {
-  const dayCard = document.createElement('div');
-  dayCard.className = 'day-card';
-
-  const dayContainer = document.createElement('div');
-  dayContainer.className = 'day-container';
-  dayCard.appendChild(dayContainer);
-
-  const day = document.createElement('p');
-  day.textContent = data.day_of_week;
-  dayContainer.appendChild(day);
-
-  const imgContainer = document.createElement('div');
-  imgContainer.className = 'img-container';
-  dayCard.appendChild(imgContainer);
-
-  const img = document.createElement('img');
-  img.src = `http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
-  imgContainer.appendChild(img);
-
-  const tempContainer = document.createElement('div');
-  tempContainer.className = 'temp-container';
-  dayCard.appendChild(tempContainer);
-
-  const highTempText = document.createElement('p');
-  highTempText.textContent = `High: ${Math.round(
-    utilities.temperatureConversion('fahrenheit', 'kelvin', data.temp.max)
-  )}`;
-  tempContainer.appendChild(highTempText);
-
-  const lowTempText = document.createElement('p');
-  lowTempText.textContent = `Low: ${Math.round(
-    utilities.temperatureConversion('fahrenheit', 'kelvin', data.temp.min)
-  )}`;
-  tempContainer.appendChild(lowTempText);
-
-  const descriptionContainer = document.createElement('div');
-  descriptionContainer.className = 'description-container';
-  dayCard.appendChild(descriptionContainer);
-
-  const description = document.createElement('p');
-  description.textContent = data.weather[0].description;
-  descriptionContainer.appendChild(description);
-
-  return dayCard;
-};
-
 const renderDayCards = function (data) {
   const cardContainer = document.createElement('div');
   cardContainer.className = 'card-container';
+
+  const renderDayCard = function (data) {
+    const dayCard = document.createElement('div');
+    dayCard.className = 'day-card';
+
+    const dayContainer = document.createElement('div');
+    dayContainer.className = 'day-container';
+    dayCard.appendChild(dayContainer);
+
+    const day = document.createElement('p');
+    day.textContent = data.day_of_week;
+    dayContainer.appendChild(day);
+
+    const imgContainer = document.createElement('div');
+    imgContainer.className = 'img-container';
+    dayCard.appendChild(imgContainer);
+
+    const img = document.createElement('img');
+    img.src = `http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
+    imgContainer.appendChild(img);
+
+    const tempContainer = document.createElement('div');
+    tempContainer.className = 'temp-container';
+    dayCard.appendChild(tempContainer);
+
+    const highTempText = document.createElement('p');
+    highTempText.textContent = `High: ${Math.round(
+      utilities.temperatureConversion('fahrenheit', 'kelvin', data.temp.max)
+    )}`;
+    tempContainer.appendChild(highTempText);
+
+    const lowTempText = document.createElement('p');
+    lowTempText.textContent = `Low: ${Math.round(
+      utilities.temperatureConversion('fahrenheit', 'kelvin', data.temp.min)
+    )}`;
+    tempContainer.appendChild(lowTempText);
+
+    const descriptionContainer = document.createElement('div');
+    descriptionContainer.className = 'description-container';
+    dayCard.appendChild(descriptionContainer);
+
+    const description = document.createElement('p');
+    description.textContent = data.weather[0].description;
+    descriptionContainer.appendChild(description);
+
+    return dayCard;
+  };
+
   data.forEach((day, index) => {
     const today = new Date();
     day.day_of_week = utilities.getDayOfWeek((today.getDay() + index) % 7);
     const dayCard = renderDayCard(day);
     cardContainer.appendChild(dayCard);
   });
+
   return cardContainer;
 };
 
+renderLocationForm();
 parseInputValue('01801');
 // parseInputValue('boston, massachusetts, us');
 
-export { renderLocationForm, renderDayCard };
+export { renderLocationForm };
