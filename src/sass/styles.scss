@@ -34,11 +34,11 @@ html {
       align-items: center;
       justify-content: center;
       gap: 2rem;
-      
+
       .results-heading {
         font-size: 3rem;
       }
-  
+
       .locations-container {
         font-size: 2rem;
         display: flex;
@@ -46,7 +46,6 @@ html {
         gap: 1rem;
 
         .location-result {
-
           &:hover {
             text-decoration: underline;
             cursor: pointer;
@@ -188,10 +187,6 @@ html {
   box-shadow: 0.15rem 0.25rem 0.5rem #eee;
 
   transition: box-shadow 150ms;
-
-  &:active {
-    box-shadow: none;
-  }
 
   * {
     user-select: none;
