@@ -16,6 +16,10 @@ const getLocationWeather = async function (data) {
 
 const handleZipcodeInput = async function (input) {
   const data = await weatherAPI.getLocationFromZip(input);
+  if (!data) {
+    console.log('sorry, no result');
+    return;
+  }
   const locationName = await getLocationName(data);
   renderLocationHeader(locationName);
   const weatherData = await getLocationWeather(data);
@@ -24,6 +28,10 @@ const handleZipcodeInput = async function (input) {
 
 const handleTextInput = async function (input) {
   const locations = await weatherAPI.getLocationsFromNames(input);
+  // if (locations.length === 0) {
+  //   console.log('no results');
+  //   return;
+  // }
   if (locations.length === 1) {
     const locationName = await getLocationName(locations[0]);
     renderLocationHeader(locationName);
@@ -51,8 +59,10 @@ const handleSearchSubmission = async function (e) {
 };
 
 const handleLocationClick = async function (e) {
+  const main = document.querySelector('main');
   const elem = e.target;
   const location = elem.innerText.slice(0, -1);
+  utilities.removeElementContents(main);
   handleTextInput(location);
 };
 
@@ -62,6 +72,13 @@ const renderSearchResults = function (locations) {
 
   const resultsContainer = document.createElement('div');
   resultsContainer.className = 'search-results';
+
+  if (locations.length === 0) {
+    console.log(locations);
+    resultsContainer.textContent = 'Sorry, no matches.';
+    main.appendChild(resultsContainer);
+    return;
+  }
 
   const locationsContainer = document.createElement('div');
   locationsContainer.className = 'locations-container';
