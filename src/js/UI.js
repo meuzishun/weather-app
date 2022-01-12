@@ -42,7 +42,7 @@ const parseInputValue = function (inputValue) {
   }
 };
 
-export const handleSearchSubmission = async function (e) {
+const handleSearchSubmission = async function (e) {
   e.preventDefault();
   const input = e.target.children[0];
   const inputValue = input.value;
@@ -50,8 +50,40 @@ export const handleSearchSubmission = async function (e) {
   input.value = '';
 };
 
-// const locationForm = document.querySelector('.location-form');
-// locationForm.addEventListener('submit', handleSearchSubmission);
+const handleLocationClick = async function (e) {
+  const elem = e.target;
+  const location = elem.innerText.slice(0, -1);
+  handleTextInput(location);
+};
+
+const renderSearchResults = function (locations) {
+  const main = document.querySelector('main');
+  utilities.removeElementContents(main);
+
+  const resultsContainer = document.createElement('div');
+  resultsContainer.className = 'search-results';
+
+  const locationsContainer = document.createElement('div');
+  locationsContainer.className = 'locations-container';
+
+  const resultsHeading = document.createElement('h3');
+  resultsHeading.className = 'results-heading';
+  resultsHeading.textContent = 'Did you mean...';
+
+  locations.forEach((location) => {
+    const locationResult = document.createElement('p');
+    locationResult.className = 'location-result';
+    locationResult.textContent = `${location.name}, ${location.state}, ${location.country}?`;
+    locationResult.dataset.lat = location.lat;
+    locationResult.dataset.lon = location.lon;
+    locationResult.addEventListener('click', handleLocationClick);
+    locationsContainer.appendChild(locationResult);
+  });
+
+  resultsContainer.appendChild(resultsHeading);
+  resultsContainer.appendChild(locationsContainer);
+  main.appendChild(resultsContainer);
+};
 
 const renderLocationHeader = function (locationName) {
   const locationHeading = document.querySelector('.location-title');
@@ -249,76 +281,6 @@ const renderDailyDisplay = function (data) {
   return renderDayCards(data);
 };
 
-const renderLocationForm = function () {
-  const header = document.querySelector('header');
-
-  const elementTypes = ['form', 'input', 'button'];
-
-  const elements = elementTypes.map((type) => {
-    const elem = document.createElement(type);
-    elem.className = `location-${type}`;
-
-    if (type === 'label') {
-      elem.htmlFor = 'location-input';
-      elem.textContent = 'location:';
-    }
-
-    if (type === 'input') {
-      elem.id = 'location-input';
-      elem.placeholder = 'enter location...';
-    }
-
-    if (type === 'button') {
-      elem.type = 'submit';
-      elem.textContent = 'search';
-    }
-    return elem;
-  });
-
-  elements.forEach((elem, index, elements) => {
-    if (index > 0) elements[0].appendChild(elem);
-  });
-
-  // elements[0].addEventListener('submit', handleLocationFormSubmit);
-  elements[0].addEventListener('submit', handleSearchSubmission);
-  header.appendChild(elements[0]);
-};
-
-const handleLocationClick = async function (e) {
-  const elem = e.target;
-  const location = elem.innerText.slice(0, -1);
-  handleTextInput(location);
-};
-
-const renderSearchResults = function (locations) {
-  const main = document.querySelector('main');
-  utilities.removeElementContents(main);
-
-  const resultsContainer = document.createElement('div');
-  resultsContainer.className = 'search-results';
-
-  const locationsContainer = document.createElement('div');
-  locationsContainer.className = 'locations-container';
-
-  const resultsHeading = document.createElement('h3');
-  resultsHeading.className = 'results-heading';
-  resultsHeading.textContent = 'Did you mean...';
-
-  locations.forEach((location) => {
-    const locationResult = document.createElement('p');
-    locationResult.className = 'location-result';
-    locationResult.textContent = `${location.name}, ${location.state}, ${location.country}?`;
-    locationResult.dataset.lat = location.lat;
-    locationResult.dataset.lon = location.lon;
-    locationResult.addEventListener('click', handleLocationClick);
-    locationsContainer.appendChild(locationResult);
-  });
-
-  resultsContainer.appendChild(resultsHeading);
-  resultsContainer.appendChild(locationsContainer);
-  main.appendChild(resultsContainer);
-};
-
 const renderDayCards = function (data) {
   const cardContainer = document.createElement('div');
   cardContainer.className = 'card-container';
@@ -380,8 +342,41 @@ const renderDayCards = function (data) {
   return cardContainer;
 };
 
+const renderLocationForm = function () {
+  const header = document.querySelector('header');
+
+  const elementTypes = ['form', 'input', 'button'];
+
+  const elements = elementTypes.map((type) => {
+    const elem = document.createElement(type);
+    elem.className = `location-${type}`;
+
+    if (type === 'label') {
+      elem.htmlFor = 'location-input';
+      elem.textContent = 'location:';
+    }
+
+    if (type === 'input') {
+      elem.id = 'location-input';
+      elem.placeholder = 'enter location...';
+    }
+
+    if (type === 'button') {
+      elem.type = 'submit';
+      elem.textContent = 'search';
+    }
+    return elem;
+  });
+
+  elements.forEach((elem, index, elements) => {
+    if (index > 0) elements[0].appendChild(elem);
+  });
+
+  elements[0].addEventListener('submit', handleSearchSubmission);
+  header.appendChild(elements[0]);
+};
+
 renderLocationForm();
 parseInputValue('01801');
-// parseInputValue('boston, massachusetts, us');
 
 export { renderLocationForm };
