@@ -74,7 +74,6 @@ const renderSearchResults = function (locations) {
   resultsContainer.className = 'search-results';
 
   if (locations.length === 0) {
-    console.log(locations);
     resultsContainer.textContent = 'Sorry, no matches.';
     main.appendChild(resultsContainer);
     return;
