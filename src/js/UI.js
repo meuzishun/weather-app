@@ -67,23 +67,26 @@ const handleLocationClick = async function (e) {
 };
 
 const renderSearchResults = function (locations) {
+  const locationHeading = document.querySelector('.location-title');
+  locationHeading.textContent = '';
+
   const main = document.querySelector('main');
   utilities.removeElementContents(main);
 
   const resultsContainer = document.createElement('div');
   resultsContainer.className = 'search-results';
 
-  if (locations.length === 0) {
-    resultsContainer.textContent = 'Sorry, no matches.';
-    main.appendChild(resultsContainer);
-    return;
-  }
-
   const locationsContainer = document.createElement('div');
   locationsContainer.className = 'locations-container';
 
   const resultsHeading = document.createElement('h3');
   resultsHeading.className = 'results-heading';
+  if (locations.length === 0) {
+    resultsHeading.textContent = 'Sorry, no matches.';
+    resultsContainer.appendChild(resultsHeading);
+    main.appendChild(resultsContainer);
+    return;
+  }
   resultsHeading.textContent = 'Did you mean...';
 
   locations.forEach((location) => {
