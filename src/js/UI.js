@@ -28,10 +28,6 @@ const handleZipcodeInput = async function (input) {
 
 const handleTextInput = async function (input) {
   const locations = await weatherAPI.getLocationsFromNames(input);
-  // if (locations.length === 0) {
-  //   console.log('no results');
-  //   return;
-  // }
   if (locations.length === 1) {
     const locationName = await getLocationName(locations[0]);
     renderLocationHeader(locationName);
