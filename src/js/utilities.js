@@ -59,33 +59,6 @@ export const formatTime = function (val, tz) {
   return `${hrs}:${min} ${pastNoon ? 'PM' : 'AM'}`;
 };
 
-export const switchTempSystem = function (type) {
-  const tempSpans = [...document.querySelectorAll('.temp')];
-  tempSpans.forEach((span) => {
-    if (span.classList.contains(type)) {
-      return;
-    }
-    const oldText = span.innerText;
-    const oldNumber = /\d*/.exec(oldText);
-    const oldLetter = /[FC]/g.exec(oldText);
-
-    span.classList.remove('fahrenheit');
-    span.classList.remove('celsius');
-    span.classList.add(type);
-
-    const newNumber = Math.round(
-      temperatureConversion(
-        type,
-        `${type === 'celsius' ? 'fahrenheit' : 'celsius'}`,
-        oldNumber
-      )
-    );
-    const newLetter = type.slice(0, 1).toUpperCase();
-    const newText = `${newNumber}\u00B0${newLetter}`;
-    span.textContent = newText;
-  });
-};
-
 export const convert_metersSec_to_mph = function (val) {
   return val * 2.2369;
 };

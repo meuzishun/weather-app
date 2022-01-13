@@ -1,6 +1,14 @@
 import * as weatherAPI from './weatherAPI.js';
 import * as utilities from './utilities.js';
 
+const getSystem = function () {
+  const btnCover = document.querySelector('.cover');
+  let system = btnCover.classList.contains('fahrenheit')
+    ? 'fahrenheit'
+    : 'celsius';
+  return system;
+};
+
 const getLocationName = async function (data) {
   const { lat, lon } = data;
   const location = await weatherAPI.getLocationsFromCoords(lat, lon, 1);
@@ -111,6 +119,37 @@ const displays = {
   daily: null,
 };
 
+const switchTempSystem = function (type) {
+  const tempSpans = [
+    ...displays['currently'].querySelectorAll('.temp'),
+    ...displays['hourly'].querySelectorAll('.temp'),
+    ...displays['daily'].querySelectorAll('.temp'),
+  ];
+  tempSpans.forEach((span) => {
+    if (span.classList.contains(type)) {
+      return;
+    }
+    const oldText = span.innerText;
+    const oldNumber = /\d*/.exec(oldText);
+    const oldLetter = /[FC]/g.exec(oldText);
+
+    span.classList.remove('fahrenheit');
+    span.classList.remove('celsius');
+    span.classList.add(type);
+
+    const newNumber = Math.round(
+      utilities.temperatureConversion(
+        type,
+        `${type === 'celsius' ? 'fahrenheit' : 'celsius'}`,
+        oldNumber
+      )
+    );
+    const newLetter = type.slice(0, 1).toUpperCase();
+    const newText = `${newNumber}\u00B0${newLetter}`;
+    span.textContent = newText;
+  });
+};
+
 const handleNavItemClick = function (e) {
   const tab = e.target;
   [...tab.parentElement.children].forEach((child) =>
@@ -147,7 +186,7 @@ const renderMainDisplay = function (weatherData) {
 
   displays['currently'] = renderCurrentlyDisplay(weatherData);
   displays['hourly'] = renderHourlyDisplay(weatherData);
-  displays['daily'] = renderDailyDisplay(weatherData.daily);
+  displays['daily'] = renderDailyDisplay(weatherData);
 
   const weatherNav = renderWeatherNav();
   [...weatherNav.children].forEach((navItem) => {
@@ -168,6 +207,8 @@ const renderWeatherDisplay = function (display) {
 };
 
 const renderCurrentlyDisplay = function (weatherData) {
+  const system = getSystem();
+
   const contentWrapper = document.createElement('div');
   contentWrapper.className = 'content-wrapper';
 
@@ -199,14 +240,10 @@ const renderCurrentlyDisplay = function (weatherData) {
   currentTemp.textContent = 'Temp: ';
   const currentTempText = document.createElement('span');
   currentTempText.classList.add('temp');
-  currentTempText.classList.add('fahrenheit');
+  currentTempText.classList.add(system);
   currentTempText.textContent = `${Math.round(
-    utilities.temperatureConversion(
-      'fahrenheit',
-      'kelvin',
-      weatherData.current.temp
-    )
-  )}ºF`;
+    utilities.temperatureConversion(system, 'kelvin', weatherData.current.temp)
+  )}º${system.split()[0][0].toUpperCase()}`;
   currentTemp.appendChild(currentTempText);
   textContainer.appendChild(currentTemp);
 
@@ -214,14 +251,14 @@ const renderCurrentlyDisplay = function (weatherData) {
   feelsLike.textContent = 'Feels like: ';
   const feelsLikeText = document.createElement('span');
   feelsLikeText.classList.add('temp');
-  feelsLikeText.classList.add('fahrenheit');
+  feelsLikeText.classList.add(system);
   feelsLikeText.textContent = `${Math.round(
     utilities.temperatureConversion(
-      'fahrenheit',
+      system,
       'kelvin',
       weatherData.current.feels_like
     )
-  )}ºF`;
+  )}º${system.split()[0][0].toUpperCase()}`;
   feelsLike.appendChild(feelsLikeText);
   textContainer.appendChild(feelsLike);
 
@@ -253,6 +290,8 @@ const renderCurrentlyDisplay = function (weatherData) {
 };
 
 const renderHourlyDisplay = function (data) {
+  const system = getSystem();
+
   const timezone_offset = data.timezone_offset;
   const hourlyCardContainer = document.createElement('div');
   hourlyCardContainer.className = 'hourly-card-container';
@@ -291,8 +330,8 @@ const renderHourlyDisplay = function (data) {
     tempText.classList.add('temp');
     tempText.classList.add('fahrenheit');
     tempText.textContent = `${Math.round(
-      utilities.temperatureConversion('fahrenheit', 'kelvin', data.temp)
-    )}ºF`;
+      utilities.temperatureConversion(system, 'kelvin', data.temp)
+    )}º${system.split()[0][0].toUpperCase()}`;
     tempContainer.appendChild(tempText);
 
     const descriptionContainer = document.createElement('div');
@@ -323,10 +362,12 @@ const renderHourlyDisplay = function (data) {
 };
 
 const renderDailyDisplay = function (data) {
-  return renderDayCards(data);
+  return renderDayCards(data.daily);
 };
 
 const renderDayCards = function (data) {
+  const system = getSystem();
+
   const cardContainer = document.createElement('div');
   cardContainer.className = 'card-container';
 
@@ -358,10 +399,10 @@ const renderDayCards = function (data) {
     highTempText.textContent = 'High: ';
     const highTempSpan = document.createElement('span');
     highTempSpan.classList.add('temp');
-    highTempSpan.classList.add('fahrenheit');
+    highTempSpan.classList.add(system);
     highTempSpan.textContent = `${Math.round(
-      utilities.temperatureConversion('fahrenheit', 'kelvin', data.temp.max)
-    )}ºF`;
+      utilities.temperatureConversion(system, 'kelvin', data.temp.max)
+    )}º${system.split()[0][0].toUpperCase()}`;
     highTempText.appendChild(highTempSpan);
     tempContainer.appendChild(highTempText);
 
@@ -369,10 +410,10 @@ const renderDayCards = function (data) {
     lowTempText.textContent = 'Low: ';
     const lowTempSpan = document.createElement('span');
     lowTempSpan.classList.add('temp');
-    lowTempSpan.classList.add('fahrenheit');
+    lowTempSpan.classList.add(system);
     lowTempSpan.textContent = `${Math.round(
-      utilities.temperatureConversion('fahrenheit', 'kelvin', data.temp.min)
-    )}ºF`;
+      utilities.temperatureConversion(system, 'kelvin', data.temp.min)
+    )}º${system.split()[0][0].toUpperCase()}`;
     lowTempText.appendChild(lowTempSpan);
     tempContainer.appendChild(lowTempText);
 
@@ -436,12 +477,12 @@ const renderLocationForm = function () {
   const switchCover = document.querySelector('.cover');
   tempSwitch.addEventListener('change', () => {
     if (tempSwitch.checked) {
-      utilities.switchTempSystem('celsius');
+      switchTempSystem('celsius');
       switchCover.classList.remove('fahrenheit');
       switchCover.classList.add('celsius');
     }
     if (!tempSwitch.checked) {
-      utilities.switchTempSystem('fahrenheit');
+      switchTempSystem('fahrenheit');
       switchCover.classList.remove('celsius');
       switchCover.classList.add('fahrenheit');
     }
