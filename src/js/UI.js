@@ -146,7 +146,7 @@ const renderMainDisplay = function (weatherData) {
   utilities.removeElementContents(main);
 
   displays['currently'] = renderCurrentlyDisplay(weatherData);
-  displays['hourly'] = renderHourlyDisplay(weatherData.hourly);
+  displays['hourly'] = renderHourlyDisplay(weatherData);
   displays['daily'] = renderDailyDisplay(weatherData.daily);
 
   const weatherNav = renderWeatherNav();
@@ -243,6 +243,7 @@ const renderCurrentlyDisplay = function (weatherData) {
 };
 
 const renderHourlyDisplay = function (data) {
+  const timezone_offset = data.timezone_offset;
   const hourlyCardContainer = document.createElement('div');
   hourlyCardContainer.className = 'hourly-card-container';
 
@@ -256,11 +257,11 @@ const renderHourlyDisplay = function (data) {
 
     const time = document.createElement('p');
     time.textContent = `${
-      utilities.formatTime(data.dt) === '0:00 AM'
+      utilities.formatTime(data.dt, timezone_offset) === '0:00 AM'
         ? '12:00 AM'
-        : utilities.formatTime(data.dt) === '0:00 PM'
+        : utilities.formatTime(data.dt, timezone_offset) === '0:00 PM'
         ? '12:00 PM'
-        : utilities.formatTime(data.dt)
+        : utilities.formatTime(data.dt, timezone_offset)
     }`;
     timeContainer.appendChild(time);
 
@@ -301,7 +302,7 @@ const renderHourlyDisplay = function (data) {
     return hourCard;
   };
 
-  data.forEach((hour) => {
+  data.hourly.forEach((hour) => {
     const hourCard = renderHourCard(hour);
     hourlyCardContainer.appendChild(hourCard);
   });
