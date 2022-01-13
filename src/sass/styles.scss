@@ -23,8 +23,19 @@ html {
     justify-content: space-between;
     padding: 1rem;
 
-    .location-title {
-      font-size: 3rem;
+    .left-side {
+      flex: 1;
+
+      .location-title {
+        font-size: 3rem;
+      }
+    }
+
+    .right-side {
+      flex: 1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
   }
 

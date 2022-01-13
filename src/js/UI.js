@@ -439,7 +439,8 @@ const renderDayCards = function (data) {
 };
 
 const renderLocationForm = function () {
-  const header = document.querySelector('header');
+  // const header = document.querySelector('header');
+  const rightSide = document.querySelector('.right-side');
 
   const elementTypes = ['form', 'input', 'button'];
 
@@ -469,7 +470,7 @@ const renderLocationForm = function () {
   });
 
   elements[0].addEventListener('submit', handleSearchSubmission);
-  header.appendChild(elements[0]);
+  rightSide.appendChild(elements[0]);
 };
 
 (function () {
