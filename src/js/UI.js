@@ -433,12 +433,17 @@ const renderLocationForm = function () {
 
 (function () {
   const tempSwitch = document.querySelector('#temp');
+  const switchCover = document.querySelector('.cover');
   tempSwitch.addEventListener('change', () => {
     if (tempSwitch.checked) {
       utilities.switchTempSystem('celsius');
+      switchCover.classList.remove('fahrenheit');
+      switchCover.classList.add('celsius');
     }
     if (!tempSwitch.checked) {
       utilities.switchTempSystem('fahrenheit');
+      switchCover.classList.remove('celsius');
+      switchCover.classList.add('fahrenheit');
     }
   });
 })();
