@@ -211,13 +211,18 @@ const renderCurrentlyDisplay = function (weatherData) {
   textContainer.appendChild(currentTemp);
 
   const feelsLike = document.createElement('p');
-  feelsLike.textContent = `Feels like: ${Math.round(
+  feelsLike.textContent = 'Feels like: ';
+  const feelsLikeText = document.createElement('span');
+  feelsLikeText.classList.add('temp');
+  feelsLikeText.classList.add('fahrenheit');
+  feelsLikeText.textContent = `${Math.round(
     utilities.temperatureConversion(
       'fahrenheit',
       'kelvin',
       weatherData.current.feels_like
     )
   )}ºF`;
+  feelsLike.appendChild(feelsLikeText);
   textContainer.appendChild(feelsLike);
 
   const sunrise = document.createElement('p');
@@ -282,7 +287,9 @@ const renderHourlyDisplay = function (data) {
     tempContainer.className = 'temp-container';
     hourCard.appendChild(tempContainer);
 
-    const tempText = document.createElement('p');
+    const tempText = document.createElement('span');
+    tempText.classList.add('temp');
+    tempText.classList.add('fahrenheit');
     tempText.textContent = `${Math.round(
       utilities.temperatureConversion('fahrenheit', 'kelvin', data.temp)
     )}ºF`;
@@ -348,15 +355,25 @@ const renderDayCards = function (data) {
     dayCard.appendChild(tempContainer);
 
     const highTempText = document.createElement('p');
-    highTempText.textContent = `High: ${Math.round(
+    highTempText.textContent = 'High: ';
+    const highTempSpan = document.createElement('span');
+    highTempSpan.classList.add('temp');
+    highTempSpan.classList.add('fahrenheit');
+    highTempSpan.textContent = `${Math.round(
       utilities.temperatureConversion('fahrenheit', 'kelvin', data.temp.max)
-    )}`;
+    )}ºF`;
+    highTempText.appendChild(highTempSpan);
     tempContainer.appendChild(highTempText);
 
     const lowTempText = document.createElement('p');
-    lowTempText.textContent = `Low: ${Math.round(
+    lowTempText.textContent = 'Low: ';
+    const lowTempSpan = document.createElement('span');
+    lowTempSpan.classList.add('temp');
+    lowTempSpan.classList.add('fahrenheit');
+    lowTempSpan.textContent = `${Math.round(
       utilities.temperatureConversion('fahrenheit', 'kelvin', data.temp.min)
-    )}`;
+    )}ºF`;
+    lowTempText.appendChild(lowTempSpan);
     tempContainer.appendChild(lowTempText);
 
     const descriptionContainer = document.createElement('div');

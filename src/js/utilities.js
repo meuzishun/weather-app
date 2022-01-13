@@ -61,7 +61,6 @@ export const formatTime = function (val, tz) {
 
 export const switchTempSystem = function (type) {
   const tempSpans = [...document.querySelectorAll('.temp')];
-  console.log(tempSpans);
   tempSpans.forEach((span) => {
     if (span.classList.contains(type)) {
       return;
