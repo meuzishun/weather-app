@@ -69,7 +69,7 @@ export const switchTempSystem = function (type) {
     const oldNumber = /\d*/.exec(oldText);
     const oldLetter = /[FC]/g.exec(oldText);
 
-    span.classList.remove('fahreheit');
+    span.classList.remove('fahrenheit');
     span.classList.remove('celsius');
     span.classList.add(type);
 

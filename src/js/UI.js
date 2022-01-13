@@ -431,12 +431,24 @@ const renderLocationForm = function () {
   header.appendChild(elements[0]);
 };
 
+(function () {
+  const tempSwitch = document.querySelector('#temp');
+  tempSwitch.addEventListener('change', () => {
+    if (tempSwitch.checked) {
+      utilities.switchTempSystem('celsius');
+    }
+    if (!tempSwitch.checked) {
+      utilities.switchTempSystem('fahrenheit');
+    }
+  });
+})();
+
 renderLocationForm();
 parseInputValue('01801');
 
-const timer = setTimeout(() => {
-  utilities.switchTempSystem('celsius');
-  clearTimeout(timer);
-}, 5000);
+// const timer = setTimeout(() => {
+//   utilities.switchTempSystem('celsius');
+//   clearTimeout(timer);
+// }, 5000);
 
 export { renderLocationForm };
