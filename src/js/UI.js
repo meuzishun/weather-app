@@ -196,13 +196,18 @@ const renderCurrentlyDisplay = function (weatherData) {
   textContainer.appendChild(currentTime);
 
   const currentTemp = document.createElement('p');
-  currentTemp.textContent = `Temp: ${Math.round(
+  currentTemp.textContent = 'Temp: ';
+  const currentTempText = document.createElement('span');
+  currentTempText.classList.add('temp');
+  currentTempText.classList.add('fahrenheit');
+  currentTempText.textContent = `${Math.round(
     utilities.temperatureConversion(
       'fahrenheit',
       'kelvin',
       weatherData.current.temp
     )
   )}ºF`;
+  currentTemp.appendChild(currentTempText);
   textContainer.appendChild(currentTemp);
 
   const feelsLike = document.createElement('p');
@@ -411,5 +416,10 @@ const renderLocationForm = function () {
 
 renderLocationForm();
 parseInputValue('01801');
+
+const timer = setTimeout(() => {
+  utilities.switchTempSystem('celsius');
+  clearTimeout(timer);
+}, 5000);
 
 export { renderLocationForm };
