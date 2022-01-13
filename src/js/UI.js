@@ -145,7 +145,7 @@ const renderMainDisplay = function (weatherData) {
   const main = document.querySelector('main');
   utilities.removeElementContents(main);
 
-  displays['currently'] = renderCurrentlyDisplay(weatherData.current);
+  displays['currently'] = renderCurrentlyDisplay(weatherData);
   displays['hourly'] = renderHourlyDisplay(weatherData.hourly);
   displays['daily'] = renderDailyDisplay(weatherData.daily);
 
@@ -167,7 +167,7 @@ const renderWeatherDisplay = function (display) {
   main.appendChild(display);
 };
 
-const renderCurrentlyDisplay = function (data) {
+const renderCurrentlyDisplay = function (weatherData) {
   const contentWrapper = document.createElement('div');
   contentWrapper.className = 'content-wrapper';
 
@@ -175,13 +175,13 @@ const renderCurrentlyDisplay = function (data) {
   imgContainer.className = 'image-container';
   contentWrapper.appendChild(imgContainer);
 
-  const icon = data.weather[0].icon;
+  const icon = weatherData.current.weather[0].icon;
   const image = document.createElement('img');
   image.src = `http://openweathermap.org/img/wn/${icon}@2x.png`;
   imgContainer.appendChild(image);
 
   const description = document.createElement('p');
-  description.textContent = `${data.weather[0].description}`;
+  description.textContent = `${weatherData.current.weather[0].description}`;
   imgContainer.appendChild(description);
 
   const textContainer = document.createElement('div');
@@ -189,36 +189,53 @@ const renderCurrentlyDisplay = function (data) {
   contentWrapper.appendChild(textContainer);
 
   const currentTime = document.createElement('p');
-  currentTime.textContent = `Time: ${utilities.formatTime(data.dt)}`;
+  currentTime.textContent = `Time: ${utilities.formatTime(
+    weatherData.current.dt,
+    weatherData.timezone_offset
+  )}`;
   textContainer.appendChild(currentTime);
 
   const currentTemp = document.createElement('p');
   currentTemp.textContent = `Temp: ${Math.round(
-    utilities.temperatureConversion('fahrenheit', 'kelvin', data.temp)
+    utilities.temperatureConversion(
+      'fahrenheit',
+      'kelvin',
+      weatherData.current.temp
+    )
   )}ºF`;
   textContainer.appendChild(currentTemp);
 
   const feelsLike = document.createElement('p');
   feelsLike.textContent = `Feels like: ${Math.round(
-    utilities.temperatureConversion('fahrenheit', 'kelvin', data.feels_like)
+    utilities.temperatureConversion(
+      'fahrenheit',
+      'kelvin',
+      weatherData.current.feels_like
+    )
   )}ºF`;
   textContainer.appendChild(feelsLike);
 
   const sunrise = document.createElement('p');
-  sunrise.textContent = `Sunrise: ${utilities.formatTime(data.sunrise)}`;
+  sunrise.textContent = `Sunrise: ${utilities.formatTime(
+    weatherData.current.sunrise,
+    weatherData.timezone_offset
+  )}`;
   textContainer.appendChild(sunrise);
 
   const sunset = document.createElement('p');
-  sunset.textContent = `Sunset: ${utilities.formatTime(data.sunset)}`;
+  sunset.textContent = `Sunset: ${utilities.formatTime(
+    weatherData.current.sunset,
+    weatherData.timezone_offset
+  )}`;
   textContainer.appendChild(sunset);
 
   const humidity = document.createElement('p');
-  humidity.textContent = `Humidity: ${data.humidity}%`;
+  humidity.textContent = `Humidity: ${weatherData.current.humidity}%`;
   textContainer.appendChild(humidity);
 
   const windSpeed = document.createElement('p');
   windSpeed.textContent = `Wind speed: ${Math.round(
-    utilities.convert_metersSec_to_mph(data.wind_speed)
+    utilities.convert_metersSec_to_mph(weatherData.current.wind_speed)
   )} mph`;
   textContainer.appendChild(windSpeed);
 

@@ -42,8 +42,10 @@ export const temperatureConversion = function (typeTo, typeFrom, value) {
   return conversionLookup[typeTo][typeFrom](value);
 };
 
-export const formatTime = function (val) {
-  const now = new Date(val * 1000);
+export const formatTime = function (val, tz) {
+  const here = new Date();
+  const localTimeZoneOffset = here.getTimezoneOffset() * 60;
+  const now = new Date((val + (localTimeZoneOffset + tz)) * 1000);
   let pastNoon = false;
   let hrs = now.getHours();
   if (hrs > 12) {
