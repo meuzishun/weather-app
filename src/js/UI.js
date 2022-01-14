@@ -29,8 +29,10 @@ const handleZipcodeInput = async function (input) {
     return;
   }
   const locationName = await getLocationName(data);
-  renderLocationHeader(locationName);
   const weatherData = await getLocationWeather(data);
+  // const loadingMessage = document.querySelector('.loading-message');
+  // loadingMessage.classList.add('hide');
+  renderLocationHeader(locationName);
   renderMainDisplay(weatherData);
 };
 
@@ -38,8 +40,10 @@ const handleTextInput = async function (input) {
   const locations = await weatherAPI.getLocationsFromNames(input);
   if (locations.length === 1) {
     const locationName = await getLocationName(locations[0]);
-    renderLocationHeader(locationName);
     const weatherData = await getLocationWeather(locations[0]);
+    // const loadingMessage = document.querySelector('.loading-message');
+    // loadingMessage.classList.add('hide');
+    renderLocationHeader(locationName);
     renderMainDisplay(weatherData);
   } else {
     renderSearchResults(locations);
@@ -60,6 +64,14 @@ const handleSearchSubmission = async function (e) {
   const inputValue = input.value;
   parseInputValue(inputValue);
   input.value = '';
+  const locationHeading = document.querySelector('.location-title');
+  const main = document.querySelector('main');
+  locationHeading.textContent = '';
+  utilities.removeElementContents(main);
+  const loadingMsg = document.createElement('div');
+  loadingMsg.classList.add('loading-message');
+  loadingMsg.textContent = 'Loading...';
+  main.appendChild(loadingMsg);
 };
 
 const handleLocationClick = async function (e) {
