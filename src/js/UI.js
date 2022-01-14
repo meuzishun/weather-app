@@ -30,8 +30,6 @@ const handleZipcodeInput = async function (input) {
   }
   const locationName = await getLocationName(data);
   const weatherData = await getLocationWeather(data);
-  // const loadingMessage = document.querySelector('.loading-message');
-  // loadingMessage.classList.add('hide');
   renderLocationHeader(locationName);
   renderMainDisplay(weatherData);
 };
@@ -41,8 +39,6 @@ const handleTextInput = async function (input) {
   if (locations.length === 1) {
     const locationName = await getLocationName(locations[0]);
     const weatherData = await getLocationWeather(locations[0]);
-    // const loadingMessage = document.querySelector('.loading-message');
-    // loadingMessage.classList.add('hide');
     renderLocationHeader(locationName);
     renderMainDisplay(weatherData);
   } else {
@@ -56,6 +52,13 @@ const parseInputValue = function (inputValue) {
   } else {
     handleTextInput(inputValue);
   }
+};
+
+const setToLoading = function () {
+  const loadingMsg = document.createElement('div');
+  loadingMsg.classList.add('loading-message');
+  loadingMsg.textContent = 'Loading...';
+  main.appendChild(loadingMsg);
 };
 
 const handleSearchSubmission = async function (e) {
@@ -76,9 +79,13 @@ const handleSearchSubmission = async function (e) {
 
 const handleLocationClick = async function (e) {
   const main = document.querySelector('main');
+  utilities.removeElementContents(main);
+  const loadingMsg = document.createElement('div');
+  loadingMsg.classList.add('loading-message');
+  loadingMsg.textContent = 'Loading...';
+  main.appendChild(loadingMsg);
   const elem = e.target;
   const location = elem.innerText.slice(0, -1);
-  utilities.removeElementContents(main);
   handleTextInput(location);
 };
 
